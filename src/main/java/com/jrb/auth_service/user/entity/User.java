@@ -1,4 +1,4 @@
-package com.jrb.auth_service.entity;
+package com.jrb.auth_service.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

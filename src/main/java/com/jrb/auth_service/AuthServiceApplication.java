@@ -11,8 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.jrb.auth_service.entity.User;
-import com.jrb.auth_service.repository.UserRepository;
+import com.jrb.auth_service.user.UserRepository;
+import com.jrb.auth_service.user.entity.User;
 
 @SpringBootApplication
 public class AuthServiceApplication {

@@ -1,12 +1,11 @@
-package com.jrb.auth_service.controller;
+package com.jrb.auth_service.auth;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrb.auth_service.entity.User;
-import com.jrb.auth_service.services.AuthService;
+import com.jrb.auth_service.user.entity.User;
 
 import lombok.extern.java.Log;
 
@@ -22,7 +21,7 @@ public class AuthController {
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable String userId) {
+    public User getUser(@PathVariable Long userId) {
         return authService.getUser(userId);
     }
 }

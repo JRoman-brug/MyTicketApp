@@ -1,10 +1,10 @@
-package com.jrb.auth_service.services;
+package com.jrb.auth_service.auth;
 
 import org.springframework.stereotype.Service;
 
-import com.jrb.auth_service.entity.User;
-import com.jrb.auth_service.exception.UserNotFoundException;
-import com.jrb.auth_service.repository.UserRepository;
+import com.jrb.auth_service.user.UserRepository;
+import com.jrb.auth_service.user.entity.User;
+import com.jrb.auth_service.user.exception.UserNotFoundException;
 
 @Service
 public class AuthService {
@@ -14,7 +14,7 @@ public class AuthService {
         this.repository = repository;
     }
 
-    public User getUser(String userId) {
+    public User getUser(Long userId) {
         return repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("No se encontró el usuario con id: " + userId));
     }

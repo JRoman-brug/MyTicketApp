@@ -1,10 +1,10 @@
-package com.jrb.auth_service.controller;
+package com.jrb.auth_service.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.jrb.auth_service.exception.UserNotFoundException;
+import com.jrb.auth_service.user.exception.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
