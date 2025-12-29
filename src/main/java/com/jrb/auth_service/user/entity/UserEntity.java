@@ -20,7 +20,7 @@ import lombok.extern.java.Log;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "app_user") // psql have a reserved table with name user
-public class User {
+public class UserEntity {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
