@@ -29,7 +29,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         UserEntity userTest = UserEntity.builder()
-                .firstName("roman")
+                .firstname("roman")
                 .lastname("brugnoni")
                 .email("test@gmail.com")
                 .password(encoder.encode("123456"))
@@ -42,7 +42,7 @@ public class DataSeeder implements CommandLineRunner {
             String password = faker.credentials().password();
             String hashedPassword = encoder.encode(password);
             UserEntity temp = UserEntity.builder()
-                    .firstName(firstName)
+                    .firstname(firstName)
                     .lastname(lastName)
                     .email(email)
                     .password(hashedPassword)

@@ -22,13 +22,12 @@ import lombok.extern.java.Log;
 @Table(name = "app_user") // psql have a reserved table with name user
 public class UserEntity {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
     @SequenceGenerator(name = "user_seq_gen", sequenceName = "users_id_seq", initialValue = 100000, allocationSize = 1)
     private Long id;
 
     @NotNull
-    private String firstName;
+    private String firstname;
 
     @NotNull
     private String lastname;
