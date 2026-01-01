@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.auth_service.auth.dto.LoginRequestDTO;
+import com.jrb.auth_service.auth.dto.LoginResponseDTO;
 import com.jrb.auth_service.auth.dto.RegisterRequestDTO;
 import com.jrb.auth_service.auth.dto.RegisterResponseDTO;
 import com.jrb.auth_service.user.entity.UserEntity;
@@ -36,9 +37,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
-        authService.login(request);
-        return new ResponseEntity<>("Hello world", HttpStatus.ACCEPTED);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authService.login(request);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/register")

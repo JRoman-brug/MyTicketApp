@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jrb.auth_service.auth.dto.LoginRequestDTO;
+import com.jrb.auth_service.auth.dto.LoginResponseDTO;
 import com.jrb.auth_service.auth.dto.RegisterRequestDTO;
 import com.jrb.auth_service.auth.dto.RegisterResponseDTO;
 import com.jrb.auth_service.auth.exceptions.EmailAlreadyUserException;
@@ -38,10 +39,13 @@ public class AuthService {
                 .orElseThrow(() -> new UserNotFoundException("No se encontró el usuario con id: " + userId));
     }
 
-    public void login(LoginRequestDTO request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(request.email(),
                 request.password());
         authorizationManager.authenticate(authenticationRequest);
+        UserEntity user = repository.findByEmail(request.email());
+        String token = jwt.generatedToke(user.getEmail());
+        return new LoginResponseDTO(user.getEmail(), token, "Login successfully");
     }
 
     public RegisterResponseDTO register(RegisterRequestDTO request) {
