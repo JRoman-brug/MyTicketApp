@@ -5,22 +5,38 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.jrb.auth_service.auth.AuthController;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JWTUtils {
-    private static final String SECRET = "codigo_espaguetti_pero_ahora_es_mucho_mas_largo_y_seguro_123";
-    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
-    private static final long EXPIRATION_TIME = 3600000;
+
+    static Logger logger = LoggerFactory.getLogger(JWTUtils.class);
+    @Value("${jwt.expiration}")
+    private long expirationTime;
+    @Value("${jwt.secret}")
+    private String secret;
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        logger.debug("Loading secrect");
+        key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generatedToke(String email) {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key)
                 .compact();
     }
