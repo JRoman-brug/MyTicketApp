@@ -51,7 +51,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponseDTO> logout(@RequestBody LogoutRequestDTO request) {
-        LogoutResponseDTO temp = authService.logout(request);
+        authService.logout(request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
