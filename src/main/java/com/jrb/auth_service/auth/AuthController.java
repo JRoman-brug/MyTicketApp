@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.auth_service.auth.dto.LoginRequestDTO;
 import com.jrb.auth_service.auth.dto.LoginResponseDTO;
+import com.jrb.auth_service.auth.dto.LogoutRequestDTO;
+import com.jrb.auth_service.auth.dto.LogoutResponseDTO;
 import com.jrb.auth_service.auth.dto.RegisterRequestDTO;
 import com.jrb.auth_service.auth.dto.RegisterResponseDTO;
 import com.jrb.auth_service.user.entity.UserEntity;
@@ -45,6 +47,12 @@ public class AuthController {
     @PostMapping("/register")
     public RegisterResponseDTO register(@RequestBody RegisterRequestDTO request) {
         return authService.register(request);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutResponseDTO> logout(@RequestBody LogoutRequestDTO request) {
+        LogoutResponseDTO temp = authService.logout(request);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }
