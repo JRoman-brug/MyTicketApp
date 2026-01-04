@@ -1,4 +1,4 @@
-package com.jrb.auth_service.utils;
+package com.jrb.auth_service.utils.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -43,36 +43,32 @@ public class JWTUtils {
                 .compact();
     }
 
-    public void verifyToken(String token) {
-        Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+    public TokenInfo verifyToken(String token) {
+        Claims payload = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        String jti = getId(payload);
+        String email = getSubjec(payload);
+        Date issueAt = getIssuiedAt(payload);
+        Date expiritaionTime = getExperitionTime(payload);
+        return new TokenInfo(jti, email, issueAt, expiritaionTime);
     }
 
-    public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+    private <T> T extractClaims(Claims payload, Function<Claims, T> claimsResolver) {
+        return claimsResolver.apply(payload);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    private String getSubjec(Claims payload) {
+        return extractClaims(payload, Claims::getSubject);
     }
 
-    public String getSubjec(String token) {
-        return extractClaims(token, Claims::getSubject);
+    private String getId(Claims payload) {
+        return extractClaims(payload, Claims::getId);
     }
 
-    public String getId(String token) {
-        return extractClaims(token, Claims::getId);
+    private Date getIssuiedAt(Claims payload) {
+        return extractClaims(payload, Claims::getIssuedAt);
     }
 
-    public Date getIssuiedAt(String token) {
-        return extractClaims(token, Claims::getIssuedAt);
-    }
-
-    public Date getExperitionTime(String token) {
-        return extractClaims(token, Claims::getExpiration);
+    private Date getExperitionTime(Claims payload) {
+        return extractClaims(payload, Claims::getExpiration);
     }
 }

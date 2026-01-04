@@ -10,20 +10,22 @@ import org.springframework.stereotype.Service;
 
 import com.jrb.auth_service.auth.dto.LoginRequestDTO;
 import com.jrb.auth_service.auth.dto.LoginResponseDTO;
-import com.jrb.auth_service.auth.dto.LogoutRequestDTO;
-import com.jrb.auth_service.auth.dto.LogoutResponseDTO;
 import com.jrb.auth_service.auth.dto.RegisterRequestDTO;
 import com.jrb.auth_service.auth.dto.RegisterResponseDTO;
 import com.jrb.auth_service.auth.entity.RevokeTokenEntity;
 import com.jrb.auth_service.auth.exceptions.EmailAlreadyUserException;
+import com.jrb.auth_service.auth.exceptions.MissingAuthToken;
 import com.jrb.auth_service.auth.mappers.UserMapper;
 import com.jrb.auth_service.user.UserRepository;
 import com.jrb.auth_service.user.entity.UserEntity;
 import com.jrb.auth_service.user.exception.UserNotFoundException;
-import com.jrb.auth_service.utils.JWTUtils;
+import com.jrb.auth_service.utils.jwt.JWTUtils;
+import com.jrb.auth_service.utils.jwt.TokenInfo;
 
 @Service
 public class AuthService {
+    private static final String AUTHENTICATION_TYPE = "Bearer";
+
     private UserRepository userRepository;
     private RevokedTokenRepository tokenRepository;
     private UserMapper mapper;
@@ -31,7 +33,8 @@ public class AuthService {
     private PasswordEncoder encoder;
     private JWTUtils jwt;
 
-    public AuthService(UserRepository userRepository, AuthenticationManager authorizationManager, UserMapper mapper,
+    public AuthService(UserRepository userRepository, AuthenticationManager authorizationManager,
+            UserMapper mapper,
             PasswordEncoder encoder, JWTUtils jwt, RevokedTokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -67,14 +70,17 @@ public class AuthService {
         return new RegisterResponseDTO(user.getEmail(), token, "null");
     }
 
-    public LogoutResponseDTO logout(LogoutRequestDTO request) {
-        String token = request.token();
-        jwt.verifyToken(token);
-        String jti = jwt.getId(token);
-        String email = jwt.getSubjec(token);
-        Date expiritionTime = jwt.getExperitionTime(token);
-        RevokeTokenEntity revokedToken = new RevokeTokenEntity(jti, email, new Date(), expiritionTime);
+    public void logout(String authToken) {
+        TokenInfo token = jwt.verifyToken(getAuthToken(authToken));
+        RevokeTokenEntity revokedToken = new RevokeTokenEntity(token.jti(), token.email(), new Date(),
+                token.expirationTime());
         tokenRepository.save(revokedToken);
-        return new LogoutResponseDTO("Logout sucessfully");
+    }
+
+    private String getAuthToken(String authToken) {
+        if (authToken == null || authToken.startsWith(AUTHENTICATION_TYPE))
+            throw new MissingAuthToken("Missing or mismatch token");
+
+        return authToken.substring(7);
     }
 }

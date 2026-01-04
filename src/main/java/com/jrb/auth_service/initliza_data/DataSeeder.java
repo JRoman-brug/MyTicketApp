@@ -19,6 +19,9 @@ public class DataSeeder implements CommandLineRunner {
     private Faker faker;
     private UserRepository repository;
     private PasswordEncoder encoder;
+    private String[] passwords = { "password1", "password2", "password3", "password4", "password5", "password6",
+            "password7", "password8", "password9", "password10" };
+    private String adminPassword = "123456";
 
     public DataSeeder(UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
@@ -28,18 +31,20 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (repository.count() > 0)
+            return;
         UserEntity userTest = UserEntity.builder()
                 .firstname("roman")
                 .lastname("brugnoni")
                 .email("test@gmail.com")
-                .password(encoder.encode("123456"))
+                .password(encoder.encode(adminPassword))
                 .build();
         repository.save(userTest);
         for (int i = 0; i < 10; i++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
             String email = faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase());
-            String password = faker.credentials().password();
+            String password = passwords[i];
             String hashedPassword = encoder.encode(password);
             UserEntity temp = UserEntity.builder()
                     .firstname(firstName)
