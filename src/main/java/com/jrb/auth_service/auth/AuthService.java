@@ -49,6 +49,7 @@ public class AuthService {
                 .orElseThrow(() -> new UserNotFoundException("No se encontró el usuario con id: " + userId));
     }
 
+    // TODO: Refactor this service, UsernamePasswordAuthenticationToken not work
     public LoginResponseDTO login(LoginRequestDTO request) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(request.email(),
                 request.password());

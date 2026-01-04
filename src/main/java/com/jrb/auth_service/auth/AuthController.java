@@ -11,11 +11,14 @@ import com.jrb.auth_service.auth.dto.LoginRequestDTO;
 import com.jrb.auth_service.auth.dto.LoginResponseDTO;
 import com.jrb.auth_service.auth.dto.RegisterRequestDTO;
 import com.jrb.auth_service.auth.dto.RegisterResponseDTO;
+import com.jrb.auth_service.user.entity.UserEntity;
 
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Log
 @RestController
@@ -28,6 +31,11 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @GetMapping("/user/{userId}")
+    public UserEntity getUserEntity(@PathVariable long userId) {
+        return authService.getUser(userId);
     }
 
     @PostMapping("/login")

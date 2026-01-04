@@ -38,7 +38,7 @@ public class JWTUtils {
                 .id(UUID.randomUUID().toString())
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .expiration(new Date(System.currentTimeMillis() + 60))
                 .signWith(key)
                 .compact();
     }
