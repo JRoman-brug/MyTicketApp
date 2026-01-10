@@ -1,0 +1,50 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  server:
+    build:
+      context: ./auth-service
+    environment:
+      DATABASE_URL: jdbc:postgresql://auth-database/auth_db
+      DB_USERNAME: myuser
+      DB_PASSWORD: mypassword
+      JWT_SECRET_KEY: codigoespagetti_pero_mucho_mas_largo_para_que_funcione_hs256
+      JWT_EXPIRATION_TIME: 3600000
+    ports:
+      - 8080:8080
+    networks:
+      - spring-net
+
+  auth-database:
+    image: postgres:16-alpine
+    user: postgres
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: auth_db
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spring-net
+volumes:
+  db-data:
+
+
+networks:
+  spring-net:
+    driver: bridge
