@@ -6,7 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,16 +26,20 @@ import lombok.Setter;
 public class Seat {
 
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long seatId;
 
-    private int column;
+    @Column(name = "seat_row")
     private int row;
+    @Column(name = "seat_column")
+    private int column;
     private String label;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TicketStatus status;
 
     @ManyToOne
+    @JoinColumn(name = "hall_id", referencedColumnName = "hallId")
     private Hall hall;
 
 }

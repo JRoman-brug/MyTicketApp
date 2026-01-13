@@ -39,8 +39,8 @@ public class HallService {
                 .name(label)
                 .totalRows(rows)
                 .totalColumns(columns)
-                .seats(seats)
                 .build();
+        newHall.addSeats(seats);
         hallRepository.save(newHall);
     }
 
