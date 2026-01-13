@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>auth-service</module>
+        <module>ticket-service</module>
     </modules>
 </project>
