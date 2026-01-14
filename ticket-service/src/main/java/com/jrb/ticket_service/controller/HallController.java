@@ -4,12 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.ticket_service.dtos.CreateHallDTO;
 import com.jrb.ticket_service.dtos.DeleteHallRequestDTO;
+import com.jrb.ticket_service.dtos.GetHallResponseDTO;
 import com.jrb.ticket_service.service.HallService;
 
 import jakarta.validation.Valid;
@@ -21,6 +23,12 @@ public class HallController {
 
     public HallController(HallService hallService) {
         this.hallService = hallService;
+    }
+
+    @GetMapping("/{hallId}")
+    public ResponseEntity<GetHallResponseDTO> getHall(@PathVariable Long hallId) {
+        GetHallResponseDTO response = hallService.getHall(hallId);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/create")

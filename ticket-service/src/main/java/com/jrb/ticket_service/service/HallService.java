@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.CreateHallDTO;
 import com.jrb.ticket_service.dtos.DeleteHallRequestDTO;
+import com.jrb.ticket_service.dtos.GetHallResponseDTO;
+import com.jrb.ticket_service.dtos.SeatDTO;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Seat;
 import com.jrb.ticket_service.entity.enums.TicketStatus;
@@ -73,6 +75,24 @@ public class HallService {
     private String getLabel(String rowLabel, String columnLabel) {
         logger.debug("Seat label created: {}{}", columnLabel, rowLabel);
         return columnLabel + rowLabel;
+    }
+
+    public GetHallResponseDTO getHall(Long id) {
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new HallNotFound(ErrorCode.HALL_NOT_FOUND));
+        String label = hall.getName();
+        int rows = hall.getTotalRows();
+        int columns = hall.getTotalColumns();
+        List<SeatDTO> seats = mapper(hall.getSeats());
+        return new GetHallResponseDTO(label, rows, columns, seats);
+    }
+
+    public List<SeatDTO> mapper(List<Seat> seats) {
+        return seats.stream().map(seat -> new SeatDTO(
+                seat.getRow(),
+                seat.getColumn(),
+                seat.getLabel(),
+                seat.getStatus()))
+                .toList();
     }
 
     public void deleteHall(DeleteHallRequestDTO dto) {
