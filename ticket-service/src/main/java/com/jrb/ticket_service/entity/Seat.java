@@ -42,4 +42,7 @@ public class Seat {
     @JoinColumn(name = "hall_id", referencedColumnName = "hallId")
     private Hall hall;
 
+    public boolean isReserved() {
+        return status == TicketStatus.BLOQUEADO;
+    }
 }

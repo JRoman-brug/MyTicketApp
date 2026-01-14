@@ -30,4 +30,10 @@ public class ControllerAdvice {
         ErrorDTO response = new ErrorDTO("Error attributes type", new Date());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(SeatIsReservedException.class)
+    public ResponseEntity<ErrorDTO> seatReserve(SeatIsReservedException ex) {
+        ErrorDTO response = new ErrorDTO("The seat is reserved", new Date());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
