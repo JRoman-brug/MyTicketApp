@@ -1,6 +1,5 @@
 package com.jrb.ticket_service.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
