@@ -1,17 +1,18 @@
 // Definimos los estados posibles de un asiento
-export type SeatStatus = "AVAILABLE" | "BLOCKED" | "SELECTED";
+export type SeatStatus = 'AVAILABLE' | 'BLOCKED' | 'SELECTED';
 
 export interface Seat {
-  id: string;
-  row: string;
-  number: number;
+  seatId: string;
+  row: number;
+  column: number;
+  label: number;
   status: SeatStatus;
 }
 
 export interface CinemaHall {
   id: string;
   name: string;
-  rows: number;
-  cols: number;
+  totalRows: number;
+  totalColumns: number;
   seats: Seat[];
 }

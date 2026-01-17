@@ -1,5 +1,5 @@
-import { api } from "@/lib/axios";
-import type { CinemaHall, Seat } from "@/features/cinema/types";
+import { api } from '@/lib/axios';
+import type { CinemaHall, Seat } from '@/features/cinema/types';
 
 // Services only talk with the provider (this case is axios)
 // We define all routes that communicate with the backend
@@ -13,7 +13,7 @@ export const cinemaService = {
     return data;
   },
   releaseSeatById: async (seatId: string) => {
-    const { data } = await api.post<Seat>(`/seat/${seatId}/reserve`);
+    const { data } = await api.post<Seat>(`/seat/${seatId}/release`);
     return data;
   },
 };
