@@ -25,13 +25,13 @@ public class SeatService {
             throw new SeatIsReservedException(ErrorCode.SEAT_RESERVED);
         seat.setStatus(TicketStatus.BLOQUEADO);
         seatRepository.save(seat);
-        return new SeatDTO(seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
+        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
     }
 
     public SeatDTO releaseSeat(Long id) {
         Seat seat = seatRepository.findById(id).orElseThrow(() -> new SeatNotFound(ErrorCode.SEAT_NOT_FOUND));
         seat.setStatus(TicketStatus.LIBRE);
         seatRepository.save(seat);
-        return new SeatDTO(seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
+        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
     }
 }
