@@ -67,7 +67,7 @@ public class HallService {
                 .row(row)
                 .column(column)
                 .label(label)
-                .status(TicketStatus.LIBRE)
+                .status(TicketStatus.AVAILABLE)
                 .build();
         return Optional.of(seat);
     }

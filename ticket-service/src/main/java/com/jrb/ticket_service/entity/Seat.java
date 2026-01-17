@@ -47,6 +47,6 @@ public class Seat {
     private Hall hall;
 
     public boolean isReserved() {
-        return status == TicketStatus.BLOQUEADO;
+        return status == TicketStatus.RESERVE;
     }
 }
