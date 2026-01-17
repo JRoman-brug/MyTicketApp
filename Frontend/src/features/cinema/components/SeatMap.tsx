@@ -1,5 +1,5 @@
 import { DummySeat, Seat } from '@/features/cinema/components/Seat';
-import type { Seat as SeatType } from '@/features/cinema/types';
+import type { SeatType } from '@/features/cinema/types';
 import { listToMatrix } from '../utils/seatUtils';
 interface SeatMap {
   readonly rows: number;

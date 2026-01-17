@@ -1,7 +1,7 @@
 // Definimos los estados posibles de un asiento
-export type SeatStatus = 'AVAILABLE' | 'RESERVE' | 'SELECTED';
+export type SeatStatus = 'AVAILABLE' | 'RESERVE';
 
-export interface Seat {
+export interface SeatType {
   seatId: string;
   row: number;
   column: number;
@@ -9,10 +9,10 @@ export interface Seat {
   status: SeatStatus;
 }
 
-export interface CinemaHall {
+export interface CinemaHallType {
   id: string;
   name: string;
   totalRows: number;
   totalColumns: number;
-  seats: Seat[];
+  seats: SeatType[];
 }

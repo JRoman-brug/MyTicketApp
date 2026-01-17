@@ -1,8 +1,8 @@
-import type { CinemaHall } from '../types';
+import type { CinemaHallType } from '../types';
 import SeatMap from './SeatMap';
 
 interface CinemaProps {
-  readonly hall: CinemaHall;
+  readonly hall: CinemaHallType;
 }
 function Cinema({ hall }: CinemaProps) {
   return (
@@ -11,7 +11,6 @@ function Cinema({ hall }: CinemaProps) {
       className="w-3/6 h-130 flex flex-col bg-gray-400 rounded-sm p-3"
     >
       <div className="text-black font-bold flex flex-col">
-        <p>Hall id: {hall.id}</p>
         <p>Hall name: {hall.name}</p>
       </div>
       <SeatMap

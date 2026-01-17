@@ -1,10 +1,10 @@
 import { Button } from '@heroui/react';
 import { useSeat } from '@/features/cinema/hooks/useSeat';
-import type { Seat } from '../types';
+import type { SeatType } from '../types';
 
 interface SeatMenuProps {
   readonly hallId: string;
-  readonly seatSelected: Seat;
+  readonly seatSelected: SeatType;
   readonly onClose: () => void;
 }
 

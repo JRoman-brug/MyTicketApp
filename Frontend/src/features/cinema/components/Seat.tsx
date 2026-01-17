@@ -1,9 +1,9 @@
-import type { Seat, SeatStatus } from '@/features/cinema/types';
+import type { SeatType, SeatStatus } from '@/features/cinema/types';
 import { Button } from '@heroui/react';
 import { Armchair } from 'lucide-react';
 import { useSeatStore } from '@/features/cinema/stores/seatStore';
 interface SeatProps {
-  readonly seat: Seat;
+  readonly seat: SeatType;
 }
 
 export function DummySeat() {
@@ -15,7 +15,7 @@ export function Seat({ seat }: SeatProps) {
   const getSeatColor = (status: SeatStatus, isSelected: boolean) => {
     if (isSelected) return 'bg-yellow-400 text-black';
     if (status === 'AVAILABLE') return 'bg-blue-300';
-    if (status === 'RESERVE') return 'bg-red-500 cursor-not-allowed';
+    if (status === 'RESERVE') return 'bg-red-500 ';
 
     return 'bg-blue-500 hover:bg-blue-600 text-white';
   };
