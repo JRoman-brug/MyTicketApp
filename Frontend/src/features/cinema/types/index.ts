@@ -1,5 +1,5 @@
 // Definimos los estados posibles de un asiento
-export type SeatStatus = 'AVAILABLE' | 'BLOCKED' | 'SELECTED';
+export type SeatStatus = 'AVAILABLE' | 'RESERVE' | 'SELECTED';
 
 export interface Seat {
   seatId: string;
