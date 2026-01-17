@@ -6,10 +6,13 @@ interface CinemaProps {
 }
 function Cinema({ hall }: CinemaProps) {
   return (
-    <section key={'menu'} className="w-3/6 h-130 flex flex-col bg-gray-500 p-2">
-      <div>
-        Hall id: {hall.id}
-        Hall name: {hall.name}
+    <section
+      key={'menu'}
+      className="w-3/6 h-130 flex flex-col bg-gray-400 rounded-sm p-3"
+    >
+      <div className="text-black font-bold flex flex-col">
+        <p>Hall id: {hall.id}</p>
+        <p>Hall name: {hall.name}</p>
       </div>
       <SeatMap
         rows={hall.totalRows}
