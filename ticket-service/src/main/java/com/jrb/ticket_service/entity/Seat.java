@@ -1,11 +1,7 @@
 package com.jrb.ticket_service.entity;
 
-import com.jrb.ticket_service.entity.enums.TicketStatus;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,15 +34,8 @@ public class Seat {
     @Column(name = "seat_column")
     private int column;
     private String label;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TicketStatus status;
 
     @ManyToOne
     @JoinColumn(name = "hall_id", referencedColumnName = "hallId")
     private Hall hall;
-
-    public boolean isReserved() {
-        return status == TicketStatus.RESERVE;
-    }
 }
