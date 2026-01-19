@@ -26,7 +26,7 @@ class SeatRepositoryTest {
         // 1. PREPARACIÓN (GIVEN)
         // Creamos un asiento inicial en estado LIBRE
         Seat seat = new Seat();
-        seat.setStatus(TicketStatus.LIBRE);
+        seat.setStatus(TicketStatus.AVAILABLE);
         // Asegúrate de setear otros campos obligatorios si los tienes (ej: número,
         // fila)
 
@@ -54,11 +54,11 @@ class SeatRepositoryTest {
 
         // El Usuario 1 es más rápido: Cambia a BLOQUEADO y guarda.
         // Esto incrementará la versión en la base de datos (ej: de 0 a 1).
-        user1Seat.setStatus(TicketStatus.BLOQUEADO);
+        user1Seat.setStatus(TicketStatus.RESERVE);
         seatRepository.saveAndFlush(user1Seat);
 
         // El Usuario 2 intenta guardar su copia (que todavía cree que la versión es 0).
-        user2Seat.setStatus(TicketStatus.BLOQUEADO);
+        user2Seat.setStatus(TicketStatus.RESERVE);
 
         // 4. VERIFICACIÓN
         // Esperamos que falle porque la versión 0 ya no existe en la DB.
@@ -69,6 +69,6 @@ class SeatRepositoryTest {
         // (Opcional) Verificar que en la DB el estado quedó como lo dejó el ganador
         // (Usuario 1)
         Seat finalSeat = seatRepository.findById(seatId).get();
-        assertEquals(TicketStatus.BLOQUEADO, finalSeat.getStatus());
+        assertEquals(TicketStatus.RESERVE, finalSeat.getStatus());
     }
 }
