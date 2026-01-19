@@ -24,25 +24,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Table(name = "ticket", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_seat_showtime", columnNames = {
-                "seat_id",
-                "showtime_id"
-        })
+                @UniqueConstraint(name = "uk_seat_showtime", columnNames = {
+                                "seat_id",
+                                "showtime_id"
+                })
 })
 public class Ticket {
 
-    @Id
-    private Long id;
+        @Id
+        private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private Seat seat;
+        @ManyToOne
+        @JoinColumn(name = "seat_id")
+        private Seat seat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "showtime_id", referencedColumnName = "id")
-    private Showtime showtime;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "showtime_id")
+        private Showtime showtime;
 
-    @Enumerated(EnumType.STRING)
-    private TicketStatus status;
-    private Long userId;
+        @Enumerated(EnumType.STRING)
+        private TicketStatus status;
+        private Long userId;
 }

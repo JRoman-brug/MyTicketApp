@@ -23,7 +23,7 @@ import lombok.Setter;
 public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long hallId;
+    private Long id;
     private String name;
     private int totalColumns;
     private int totalRows;

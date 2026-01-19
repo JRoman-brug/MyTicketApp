@@ -24,7 +24,7 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long seatId;
+    private Long id;
 
     @Version
     private int version;
@@ -36,6 +36,6 @@ public class Seat {
     private String label;
 
     @ManyToOne
-    @JoinColumn(name = "hall_id", referencedColumnName = "hallId")
+    @JoinColumn(name = "hall_id")
     private Hall hall;
 }

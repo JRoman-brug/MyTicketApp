@@ -87,7 +87,7 @@ public class HallService {
 
     public List<SeatDTO> mapper(List<Seat> seats) {
         return seats.stream().map(seat -> new SeatDTO(
-                seat.getSeatId(),
+                seat.getId(),
                 seat.getRow(),
                 seat.getColumn(),
                 seat.getLabel()))

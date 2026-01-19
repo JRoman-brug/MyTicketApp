@@ -20,12 +20,12 @@ public class SeatService {
     public SeatDTO reserveSeat(Long id) {
         Seat seat = seatRepository.findById(id).orElseThrow(() -> new SeatNotFound(ErrorCode.SEAT_NOT_FOUND));
         seatRepository.save(seat);
-        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel());
+        return new SeatDTO(seat.getId(), seat.getRow(), seat.getColumn(), seat.getLabel());
     }
 
     public SeatDTO releaseSeat(Long id) {
         Seat seat = seatRepository.findById(id).orElseThrow(() -> new SeatNotFound(ErrorCode.SEAT_NOT_FOUND));
         seatRepository.save(seat);
-        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel());
+        return new SeatDTO(seat.getId(), seat.getRow(), seat.getColumn(), seat.getLabel());
     }
 }
