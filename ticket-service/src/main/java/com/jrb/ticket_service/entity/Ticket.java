@@ -3,6 +3,8 @@ package com.jrb.ticket_service.entity;
 import com.jrb.ticket_service.entity.enums.TicketStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -23,15 +25,16 @@ import lombok.Setter;
 public class Ticket {
 
     @Id
-    private long ticketId;
+    private Long id;
 
     @OneToOne
     private Seat seat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "showtime_id")
-    private ShowTime showTime;
+    @JoinColumn(name = "showtime_id", referencedColumnName = "id")
+    private Showtime showtime;
 
+    @Enumerated(EnumType.STRING)
     private TicketStatus status;
     private Long userId;
 }
