@@ -6,7 +6,7 @@
 		<groupId>com.jrb</groupId>
 		<artifactId>ticket-system-parent</artifactId>
 		<version>1.0.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>com.jrb</groupId>
 	<artifactId>ticket-service</artifactId>
