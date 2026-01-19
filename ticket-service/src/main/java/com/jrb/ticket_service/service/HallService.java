@@ -67,7 +67,6 @@ public class HallService {
                 .row(row)
                 .column(column)
                 .label(label)
-                .status(TicketStatus.AVAILABLE)
                 .build();
         return Optional.of(seat);
     }
@@ -91,8 +90,7 @@ public class HallService {
                 seat.getSeatId(),
                 seat.getRow(),
                 seat.getColumn(),
-                seat.getLabel(),
-                seat.getStatus()))
+                seat.getLabel()))
                 .toList();
     }
 

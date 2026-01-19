@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.SeatDTO;
 import com.jrb.ticket_service.entity.Seat;
-import com.jrb.ticket_service.entity.enums.TicketStatus;
 import com.jrb.ticket_service.exception.ErrorCode;
-import com.jrb.ticket_service.exception.SeatIsReservedException;
 import com.jrb.ticket_service.exception.SeatNotFound;
 import com.jrb.ticket_service.repository.SeatRepository;
 
@@ -21,17 +19,13 @@ public class SeatService {
 
     public SeatDTO reserveSeat(Long id) {
         Seat seat = seatRepository.findById(id).orElseThrow(() -> new SeatNotFound(ErrorCode.SEAT_NOT_FOUND));
-        if (seat.isReserved())
-            throw new SeatIsReservedException(ErrorCode.SEAT_RESERVED);
-        seat.setStatus(TicketStatus.RESERVE);
         seatRepository.save(seat);
-        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
+        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel());
     }
 
     public SeatDTO releaseSeat(Long id) {
         Seat seat = seatRepository.findById(id).orElseThrow(() -> new SeatNotFound(ErrorCode.SEAT_NOT_FOUND));
-        seat.setStatus(TicketStatus.AVAILABLE);
         seatRepository.save(seat);
-        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel(), seat.getStatus());
+        return new SeatDTO(seat.getSeatId(), seat.getRow(), seat.getColumn(), seat.getLabel());
     }
 }
