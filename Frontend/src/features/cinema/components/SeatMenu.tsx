@@ -21,24 +21,24 @@ function SeatMenu({ seatSelected, hallId, onClose }: SeatMenuProps) {
     cinema.releaseSeat(seatSelected.seatId);
   };
   return (
-    <div className="w-2/6 bg-green-400">
-      <p>{seatSelected.seatId}</p>
-      <p>{seatSelected.label}</p>
-      <p>{seatSelected.row}</p>
-      <p>{seatSelected.column}</p>
-      <p>{seatSelected.status}</p>
+    <div className="w-2/6 p-4 flex flex-col gap-2 rounded-sm bg-gray-400">
+      <div>
+        <p>Seat: {seatSelected.label}</p>
+        <p>
+          Status: <span>{seatSelected.status}</span>
+        </p>
+      </div>
 
       {seatSelected.status == 'AVAILABLE' ? (
-        <Button color="danger" onPress={reserveHandler}>
+        <Button className="w-full" color="danger" onPress={reserveHandler}>
           Reserve
         </Button>
       ) : (
-        <Button color="primary" onPress={releaseHandler}>
+        <Button className="w-full" color="primary" onPress={releaseHandler}>
           Release
         </Button>
       )}
-
-      <Button onPress={onClose}>close</Button>
+      <Button onPress={onClose}>Close</Button>
     </div>
   );
 }
