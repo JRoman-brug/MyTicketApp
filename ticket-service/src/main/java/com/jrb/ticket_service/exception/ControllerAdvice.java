@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
+import com.jrb.ticket_service.exception.movie.MovieNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -35,5 +36,12 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorDTO> seatReserve(SeatIsReservedException ex) {
         ErrorDTO response = new ErrorDTO("The seat is reserved", new Date());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    // Movies
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<ErrorDTO> movieNotFound(MovieNotFoundException ex) {
+        ErrorDTO response = new ErrorDTO("Movie not found", new Date());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
