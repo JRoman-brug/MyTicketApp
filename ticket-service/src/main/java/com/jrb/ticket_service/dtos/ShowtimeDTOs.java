@@ -16,6 +16,7 @@ public class ShowtimeDTOs {
         }
 
         public record UpdateRequest(
+                        @NotNull Long id,
                         @Future LocalDateTime startTime,
                         Long hallId) {
         }

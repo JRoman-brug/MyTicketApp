@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
 import com.jrb.ticket_service.exception.movie.MovieNotFoundException;
+import com.jrb.ticket_service.exception.showtime.ShowtimeHasColisitionException;
+import com.jrb.ticket_service.exception.showtime.ShowtimeNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -41,6 +43,19 @@ public class ControllerAdvice {
     // Movies
     @ExceptionHandler(MovieNotFoundException.class)
     public ResponseEntity<ErrorDTO> movieNotFound(MovieNotFoundException ex) {
+        ErrorDTO response = new ErrorDTO("Movie not found", new Date());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    // Showtime
+    @ExceptionHandler(ShowtimeNotFoundException.class)
+    public ResponseEntity<ErrorDTO> showtimeNotFound(ShowtimeNotFoundException ex) {
+        ErrorDTO response = new ErrorDTO("Showtime not found", new Date());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ShowtimeHasColisitionException.class)
+    public ResponseEntity<ErrorDTO> showtimeHasColisition(ShowtimeHasColisitionException ex) {
         ErrorDTO response = new ErrorDTO("Movie not found", new Date());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
