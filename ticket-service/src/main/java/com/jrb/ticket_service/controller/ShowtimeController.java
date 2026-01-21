@@ -27,7 +27,7 @@ public class ShowtimeController {
     @GetMapping("/{showtimeId}")
     public ResponseEntity<ShowtimeDTOs.Response> getShowtime(@PathVariable Long showtimeId) {
         ShowtimeDTOs.Response response = showtimeService.getShowtime(showtimeId);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
