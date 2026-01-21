@@ -126,6 +126,7 @@ public class ShowtimeService {
             log.warn("Delete failed. Showtime with ID {} not found", id);
             return new ShowtimeNotFoundException(ErrorCode.SHOWTIME_NOT_FOUND);
         });
+        showTimeRepository.deleteById(id);
         log.info("Showtime with ID {} delete successfully.", id);
     }
 }

@@ -56,7 +56,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(ShowtimeHasColisitionException.class)
     public ResponseEntity<ErrorDTO> showtimeHasColisition(ShowtimeHasColisitionException ex) {
-        ErrorDTO response = new ErrorDTO("Movie not found", new Date());
+        ErrorDTO response = new ErrorDTO("Has a colisition with other showtime", new Date());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
