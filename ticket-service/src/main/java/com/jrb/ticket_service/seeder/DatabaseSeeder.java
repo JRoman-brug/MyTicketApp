@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.jrb.ticket_service.dtos.CreateHallDTO;
+import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.service.HallService;
 
 @Component
@@ -34,7 +34,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 List.of("X", "X", "X"),
                 List.of("X", "X", "X"));
 
-        CreateHallDTO request = new CreateHallDTO(label, rows, columns, rowLabels, columnLabels, schema);
+        HallDTOs.CreateRequest request = new HallDTOs.CreateRequest(label, rows, columns, rowLabels, columnLabels,
+                schema);
         hallService.createHall(request);
     }
 
@@ -49,7 +50,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 List.of("X", "X", "_", "X", "X"),
                 List.of("X", "X", "_", "X", "X"),
                 List.of("X", "X", "_", "X", "X"));
-        CreateHallDTO request = new CreateHallDTO(label, rows, columns, rowLabels, columnLabels, schema);
+        HallDTOs.CreateRequest request = new HallDTOs.CreateRequest(label, rows, columns, rowLabels, columnLabels,
+                schema);
         hallService.createHall(request);
     }
 
@@ -65,7 +67,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 List.of("X", "X", "X", "X", "X", "X", "X"),
                 List.of("X", "X", "X", "X", "X", "X", "X"),
                 List.of("X", "X", "X", "X", "X", "X", "X"));
-        CreateHallDTO request = new CreateHallDTO(label, rows, columns, rowLabels, columnLabels, schema);
+        HallDTOs.CreateRequest request = new HallDTOs.CreateRequest(label, rows, columns, rowLabels, columnLabels,
+                schema);
         hallService.createHall(request);
     }
 }

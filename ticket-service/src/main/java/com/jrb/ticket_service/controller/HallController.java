@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrb.ticket_service.dtos.CreateHallDTO;
-import com.jrb.ticket_service.dtos.DeleteHallRequestDTO;
-import com.jrb.ticket_service.dtos.GetHallResponseDTO;
+import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.service.HallService;
 
-import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("api/hall")
 public class HallController {
@@ -27,20 +26,23 @@ public class HallController {
     }
 
     @GetMapping("/{hallId}")
-    public ResponseEntity<GetHallResponseDTO> getHall(@PathVariable Long hallId) {
-        GetHallResponseDTO response = hallService.getHall(hallId);
+    public ResponseEntity<HallDTOs.Response> getHall(@PathVariable Long hallId) {
+        log.debug("Rest request to get a Hall: {}", hallId);
+        HallDTOs.Response response = hallService.getHall(hallId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String> createHall(@Valid @RequestBody CreateHallDTO request) {
-        hallService.createHall(request);
-        return new ResponseEntity<>("Hall was created successfully", HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<HallDTOs.Response> createHall(@RequestBody HallDTOs.CreateRequest request) {
+        log.info("Rest request to create a Hall: {}", request.label());
+        HallDTOs.Response response = hallService.createHall(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<String> deleteHall(@RequestBody DeleteHallRequestDTO request) {
-        hallService.deleteHall(request);
-        return new ResponseEntity<>("Hall was deleted successfully", HttpStatus.ACCEPTED);
+    @DeleteMapping("/{hallId}")
+    public ResponseEntity<Void> deleteHall(@PathVariable Long hallId) {
+        log.info("Rest request to delete a Hall: {}", hallId);
+        hallService.deleteHall(hallId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

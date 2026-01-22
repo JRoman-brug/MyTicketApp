@@ -8,17 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.jrb.ticket_service.dtos.CreateHallDTO;
-import com.jrb.ticket_service.dtos.DeleteHallRequestDTO;
-import com.jrb.ticket_service.dtos.GetHallResponseDTO;
-import com.jrb.ticket_service.dtos.SeatDTO;
+import com.jrb.ticket_service.dtos.HallDTOs;
+import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Seat;
-import com.jrb.ticket_service.entity.enums.TicketStatus;
 import com.jrb.ticket_service.exception.ErrorCode;
 import com.jrb.ticket_service.exception.HallNotFound;
 import com.jrb.ticket_service.repository.HallRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class HallService {
     private HallRepository hallRepository;
@@ -32,7 +32,7 @@ public class HallService {
     // ["X"," ","X"]
     // ["X"," ","X"]
     // ]
-    public void createHall(CreateHallDTO dto) {
+    public HallDTOs.Response createHall(HallDTOs.CreateRequest dto) {
         String label = dto.label();
         int columns = dto.columns();
         int rows = dto.rows();
@@ -43,7 +43,13 @@ public class HallService {
                 .totalColumns(columns)
                 .build();
         newHall.addSeats(seats);
-        hallRepository.save(newHall);
+        Hall savedHall = hallRepository.save(newHall);
+        return new HallDTOs.Response(
+                savedHall.getId(),
+                savedHall.getName(),
+                savedHall.getTotalRows(),
+                savedHall.getTotalColumns(),
+                mapper(savedHall.getSeats()));
     }
 
     private List<Seat> seatResolver(List<List<String>> schema, List<String> rowLabels, List<String> columnsLabels) {
@@ -76,28 +82,26 @@ public class HallService {
         return columnLabel + rowLabel;
     }
 
-    public GetHallResponseDTO getHall(Long id) {
+    public HallDTOs.Response getHall(Long id) {
         Hall hall = hallRepository.findById(id).orElseThrow(() -> new HallNotFound(ErrorCode.HALL_NOT_FOUND));
         String label = hall.getName();
         int rows = hall.getTotalRows();
         int columns = hall.getTotalColumns();
-        List<SeatDTO> seats = mapper(hall.getSeats());
-        return new GetHallResponseDTO(label, rows, columns, seats);
+        List<SeatDTOs.Summary> seats = mapper(hall.getSeats());
+        return new HallDTOs.Response(id, label, rows, columns, seats);
     }
 
-    public List<SeatDTO> mapper(List<Seat> seats) {
-        return seats.stream().map(seat -> new SeatDTO(
+    public List<SeatDTOs.Summary> mapper(List<Seat> seats) {
+        return seats.stream().map(seat -> new SeatDTOs.Summary(
                 seat.getId(),
-                seat.getRow(),
-                seat.getColumn(),
                 seat.getLabel()))
                 .toList();
     }
 
-    public void deleteHall(DeleteHallRequestDTO dto) {
-        boolean exist = hallRepository.existsById(dto.id());
+    public void deleteHall(Long id) {
+        boolean exist = hallRepository.existsById(id);
         if (!exist)
             throw new HallNotFound(ErrorCode.HALL_NOT_FOUND);
-        hallRepository.deleteById(dto.id());
+        hallRepository.deleteById(id);
     }
 }

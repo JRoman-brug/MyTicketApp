@@ -3,7 +3,7 @@ package com.jrb.ticket_service.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrb.ticket_service.dtos.SeatDTO;
+import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.service.SeatService;
 
 import org.springframework.http.HttpStatus;
@@ -22,14 +22,14 @@ public class SeatController {
     }
 
     @PostMapping("/{seatId}/reserve")
-    public ResponseEntity<SeatDTO> reserveSeat(@PathVariable Long seatId) {
-        SeatDTO response = seatService.reserveSeat(seatId);
+    public ResponseEntity<SeatDTOs.Response> reserveSeat(@PathVariable Long seatId) {
+        SeatDTOs.Response response = seatService.reserveSeat(seatId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{seatId}/release")
-    public ResponseEntity<SeatDTO> releaseSeat(@PathVariable Long seatId) {
-        SeatDTO response = seatService.releaseSeat(seatId);
+    public ResponseEntity<SeatDTOs.Response> releaseSeat(@PathVariable Long seatId) {
+        SeatDTOs.Response response = seatService.releaseSeat(seatId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
