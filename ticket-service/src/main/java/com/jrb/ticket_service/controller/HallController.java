@@ -34,7 +34,7 @@ public class HallController {
 
     @PostMapping
     public ResponseEntity<HallDTOs.Response> createHall(@RequestBody HallDTOs.CreateRequest request) {
-        log.info("Rest request to create a Hall: {}", request.label());
+        log.info("Rest request to create a Hall: {}", request.name());
         HallDTOs.Response response = hallService.createHall(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

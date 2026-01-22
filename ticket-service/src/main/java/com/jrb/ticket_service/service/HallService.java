@@ -33,9 +33,9 @@ public class HallService {
     // ["X"," ","X"]
     // ]
     public HallDTOs.Response createHall(HallDTOs.CreateRequest dto) {
-        String label = dto.label();
-        int columns = dto.columns();
-        int rows = dto.rows();
+        String label = dto.name();
+        int columns = dto.totalColumns();
+        int rows = dto.totalRows();
         List<Seat> seats = seatResolver(dto.schema(), dto.rowLabels(), dto.columnLabels());
         Hall newHall = Hall.builder()
                 .name(label)

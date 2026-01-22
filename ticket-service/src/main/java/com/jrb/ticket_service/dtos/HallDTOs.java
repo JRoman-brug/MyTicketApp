@@ -9,9 +9,9 @@ public class HallDTOs {
         }
 
         public record CreateRequest(
-                        @NotNull String label,
-                        @NotNull int rows,
-                        @NotNull int columns,
+                        @NotNull String name,
+                        @NotNull int totalRows,
+                        @NotNull int totalColumns,
                         @NotNull List<String> rowLabels,
                         @NotNull List<String> columnLabels,
                         @NotNull List<List<String>> schema) {
