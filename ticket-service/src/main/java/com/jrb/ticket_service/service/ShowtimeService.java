@@ -14,7 +14,7 @@ import com.jrb.ticket_service.entity.Showtime;
 import com.jrb.ticket_service.exception.base.ErrorCode;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
-import com.jrb.ticket_service.exception.domain.showtime.ShowtimeHasColisitionException;
+import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 import com.jrb.ticket_service.repository.HallRepository;
 import com.jrb.ticket_service.repository.MovieRepository;
@@ -83,7 +83,7 @@ public class ShowtimeService {
         if (hasColisition) {
             log.warn("Create failed. Has a colition with hallID {} start time {} and end time {}", hallId, newStart,
                     newEnd);
-            throw new ShowtimeHasColisitionException(ErrorCode.SHOWTIME_HAS_COLITION);
+            throw new ShowtimeScheduleConflictException();
         }
     }
 

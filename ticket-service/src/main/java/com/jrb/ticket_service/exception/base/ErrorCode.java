@@ -11,7 +11,7 @@ public enum ErrorCode {
     SEAT_RESERVED("ERR-003", "The seat is reserved"),
     MOVIE_NOT_FOUND("ERR-004", "The seat no exist"),
     SHOWTIME_NOT_FOUND("ERR-005", "The showtime no exist"),
-    SHOWTIME_HAS_COLITION("ERR-006", "The showtime has a colisition with other showtime");
+    SHOWTIME_SCHEDULE_CONFLICT("ERR-006", "The showtime has a colisition with other showtime");
 
     private String code;
     private String message;

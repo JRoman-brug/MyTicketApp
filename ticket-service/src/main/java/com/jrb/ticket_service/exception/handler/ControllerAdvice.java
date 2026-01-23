@@ -13,7 +13,7 @@ import com.jrb.ticket_service.dtos.ErrorDTO;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.seat.SeatIsReservedException;
-import com.jrb.ticket_service.exception.domain.showtime.ShowtimeHasColisitionException;
+import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 
 @RestControllerAdvice
@@ -56,8 +56,8 @@ public class ControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ShowtimeHasColisitionException.class)
-    public ResponseEntity<ErrorDTO> showtimeHasColisition(ShowtimeHasColisitionException ex) {
+    @ExceptionHandler(ShowtimeScheduleConflictException.class)
+    public ResponseEntity<ErrorDTO> showtimeHasColisition(ShowtimeScheduleConflictException ex) {
         ErrorDTO response = new ErrorDTO("Has a colisition with other showtime", new Date());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
