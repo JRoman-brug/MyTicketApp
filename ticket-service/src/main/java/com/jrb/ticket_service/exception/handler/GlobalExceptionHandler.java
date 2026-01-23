@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
 import com.jrb.ticket_service.exception.base.BusinessException;
@@ -42,6 +44,23 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 details);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String typeName = Optional.ofNullable(ex.getRequiredType())
+                .map(Class::getSimpleName)
+                .orElse("unknown");
+
+        String detailMsg = String.format("Parameter '%s' expects a value of type %s",
+                ex.getName(), typeName);
+
+        ErrorResponse response = new ErrorResponse(
+                "TYPE_MISMATCH",
+                "Invalid parameter type in the URL.",
+                LocalDateTime.now(),
+                Map.of("parameter", detailMsg));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
