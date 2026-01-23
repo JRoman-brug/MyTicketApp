@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
-import com.jrb.ticket_service.exception.domain.hall.HallNotFound;
+import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.seat.SeatIsReservedException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeHasColisitionException;
@@ -18,8 +18,8 @@ import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundExceptio
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler(HallNotFound.class)
-    public ResponseEntity<ErrorDTO> hallNotFoundHaldler(HallNotFound ex) {
+    @ExceptionHandler(HallNotFoundException.class)
+    public ResponseEntity<ErrorDTO> hallNotFoundHaldler(HallNotFoundException ex) {
         ErrorDTO response = new ErrorDTO(ex.getMessage(), new Date());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

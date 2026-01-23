@@ -12,7 +12,7 @@ import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Movie;
 import com.jrb.ticket_service.entity.Showtime;
 import com.jrb.ticket_service.exception.base.ErrorCode;
-import com.jrb.ticket_service.exception.domain.hall.HallNotFound;
+import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeHasColisitionException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
@@ -50,7 +50,7 @@ public class ShowtimeService {
         Hall hall = hallRepository.findById(request.hallId())
                 .orElseThrow(() -> {
                     log.warn("Create failed. Hall with ID: {} not found", request.hallId());
-                    return new HallNotFound(ErrorCode.HALL_NOT_FOUND);
+                    return new HallNotFoundException(request.hallId());
                 });
         Movie movie = movieRepository.findById(request.movieId())
                 .orElseThrow(() -> {
@@ -107,7 +107,7 @@ public class ShowtimeService {
             Hall hall = hallRepository.findById(request.hallId())
                     .orElseThrow(() -> {
                         log.warn("Update failed. Movie with ID {} found: ", request.hallId());
-                        return new HallNotFound(ErrorCode.HALL_NOT_FOUND);
+                        return new HallNotFoundException(request.hallId());
                     });
             showtimeToUpdate.setHall(hall);
         }

@@ -10,8 +10,7 @@ import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Seat;
-import com.jrb.ticket_service.exception.base.ErrorCode;
-import com.jrb.ticket_service.exception.domain.hall.HallNotFound;
+import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.mapper.HallMapper;
 import com.jrb.ticket_service.mapper.SeatMapper;
 import com.jrb.ticket_service.repository.HallRepository;
@@ -74,7 +73,7 @@ public class HallService {
     }
 
     public HallDTOs.Response getHall(Long id) {
-        Hall hall = hallRepository.findById(id).orElseThrow(() -> new HallNotFound(ErrorCode.HALL_NOT_FOUND));
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new HallNotFoundException(id));
         return hallMapper.toResponse(hall);
     }
 
@@ -86,7 +85,7 @@ public class HallService {
     public void deleteHall(Long id) {
         boolean exist = hallRepository.existsById(id);
         if (!exist)
-            throw new HallNotFound(ErrorCode.HALL_NOT_FOUND);
+            throw new HallNotFoundException(id);
         hallRepository.deleteById(id);
     }
 }
