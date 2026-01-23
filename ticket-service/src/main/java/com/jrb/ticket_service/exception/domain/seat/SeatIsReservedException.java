@@ -1,16 +1,14 @@
 package com.jrb.ticket_service.exception.domain.seat;
 
+import org.springframework.http.HttpStatus;
+
+import com.jrb.ticket_service.exception.base.BusinessException;
 import com.jrb.ticket_service.exception.base.ErrorCode;
 
-public class SeatIsReservedException extends RuntimeException {
-    private final ErrorCode errorCode;
+public class SeatIsReservedException extends BusinessException {
 
-    public SeatIsReservedException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public SeatIsReservedException(Long id) {
+        super("Seat is already reserved for this showtime, ID: " + id, ErrorCode.SEAT_RESERVED, HttpStatus.CONFLICT);
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }
