@@ -1,4 +1,4 @@
-package com.jrb.ticket_service.exception;
+package com.jrb.ticket_service.exception.domain.hall;
 
 import com.jrb.ticket_service.exception.base.ErrorCode;
 

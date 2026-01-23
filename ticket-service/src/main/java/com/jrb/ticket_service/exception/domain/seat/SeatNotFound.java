@@ -1,11 +1,11 @@
-package com.jrb.ticket_service.exception.showtime;
+package com.jrb.ticket_service.exception.domain.seat;
 
 import com.jrb.ticket_service.exception.base.ErrorCode;
 
-public class ShowtimeHasColisitionException extends RuntimeException {
+public class SeatNotFound extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public ShowtimeHasColisitionException(ErrorCode errorCode) {
+    public SeatNotFound(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

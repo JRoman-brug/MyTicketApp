@@ -1,11 +1,11 @@
-package com.jrb.ticket_service.exception.movie;
+package com.jrb.ticket_service.exception.domain.seat;
 
 import com.jrb.ticket_service.exception.base.ErrorCode;
 
-public class MovieNotFoundException extends RuntimeException {
+public class SeatIsReservedException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public MovieNotFoundException(ErrorCode errorCode) {
+    public SeatIsReservedException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

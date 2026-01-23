@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
-import com.jrb.ticket_service.exception.HallNotFound;
-import com.jrb.ticket_service.exception.SeatIsReservedException;
-import com.jrb.ticket_service.exception.movie.MovieNotFoundException;
-import com.jrb.ticket_service.exception.showtime.ShowtimeHasColisitionException;
-import com.jrb.ticket_service.exception.showtime.ShowtimeNotFoundException;
+import com.jrb.ticket_service.exception.domain.hall.HallNotFound;
+import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
+import com.jrb.ticket_service.exception.domain.seat.SeatIsReservedException;
+import com.jrb.ticket_service.exception.domain.showtime.ShowtimeHasColisitionException;
+import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {

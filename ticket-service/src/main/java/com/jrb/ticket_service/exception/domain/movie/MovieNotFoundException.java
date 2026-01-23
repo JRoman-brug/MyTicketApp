@@ -1,11 +1,11 @@
-package com.jrb.ticket_service.exception.showtime;
+package com.jrb.ticket_service.exception.domain.movie;
 
 import com.jrb.ticket_service.exception.base.ErrorCode;
 
-public class ShowtimeNotFoundException extends RuntimeException {
+public class MovieNotFoundException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public ShowtimeNotFoundException(ErrorCode errorCode) {
+    public MovieNotFoundException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

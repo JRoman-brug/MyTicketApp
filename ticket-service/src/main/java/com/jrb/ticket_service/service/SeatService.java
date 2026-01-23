@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.entity.Seat;
-import com.jrb.ticket_service.exception.SeatNotFound;
 import com.jrb.ticket_service.exception.base.ErrorCode;
+import com.jrb.ticket_service.exception.domain.seat.SeatNotFound;
 import com.jrb.ticket_service.mapper.SeatMapper;
 import com.jrb.ticket_service.repository.SeatRepository;
 
