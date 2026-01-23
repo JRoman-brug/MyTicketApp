@@ -1,6 +1,6 @@
 package com.jrb.ticket_service.exception.showtime;
 
-import com.jrb.ticket_service.exception.ErrorCode;
+import com.jrb.ticket_service.exception.base.ErrorCode;
 
 public class ShowtimeNotFoundException extends RuntimeException {
     private final ErrorCode errorCode;

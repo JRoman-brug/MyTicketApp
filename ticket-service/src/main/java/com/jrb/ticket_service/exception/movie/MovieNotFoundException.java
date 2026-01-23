@@ -1,6 +1,6 @@
 package com.jrb.ticket_service.exception.movie;
 
-import com.jrb.ticket_service.exception.ErrorCode;
+import com.jrb.ticket_service.exception.base.ErrorCode;
 
 public class MovieNotFoundException extends RuntimeException {
     private final ErrorCode errorCode;
