@@ -55,7 +55,7 @@ public class ShowtimeService {
         Movie movie = movieRepository.findById(request.movieId())
                 .orElseThrow(() -> {
                     log.warn("Create failed. Movie with ID: {} not found", request.movieId());
-                    return new MovieNotFoundException(ErrorCode.MOVIE_NOT_FOUND);
+                    return new MovieNotFoundException(request.movieId());
                 });
 
         validateCollision(hall.getId(), request.startTime(), movie.getDuration());

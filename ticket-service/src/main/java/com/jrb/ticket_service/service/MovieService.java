@@ -25,7 +25,7 @@ public class MovieService {
     public MovieDTOs.Response getMovie(Long id) {
         log.debug("Fetching movie with ID: {}", id);
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException(ErrorCode.MOVIE_NOT_FOUND));
+                .orElseThrow(() -> new MovieNotFoundException(id));
 
         return movieMapper.toResponse(movie);
     }
@@ -43,7 +43,7 @@ public class MovieService {
         Movie updatedMovie = movieRepository.findById(request.id())
                 .orElseThrow(() -> {
                     log.warn("Update failed. Movie with ID {} not found", request.id());
-                    return new MovieNotFoundException(ErrorCode.MOVIE_NOT_FOUND);
+                    return new MovieNotFoundException(request.id());
                 });
 
         if (request.name() != null)
@@ -61,7 +61,7 @@ public class MovieService {
         log.info("Request to delete movie with ID: {}", id);
         movieRepository.findById(id).orElseThrow(() -> {
             log.warn("Delete failed. Movie with ID {}, not found", id);
-            return new MovieNotFoundException(ErrorCode.MOVIE_NOT_FOUND);
+            return new MovieNotFoundException(id);
         });
         movieRepository.deleteById(id);
         log.info("Movie with ID {} deleted successfully", id);
