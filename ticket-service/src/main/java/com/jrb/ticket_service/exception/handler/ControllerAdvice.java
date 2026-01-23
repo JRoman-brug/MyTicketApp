@@ -1,5 +1,6 @@
 package com.jrb.ticket_service.exception.handler;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -10,18 +11,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrb.ticket_service.dtos.ErrorDTO;
-import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
-import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
-import com.jrb.ticket_service.exception.domain.seat.SeatIsReservedException;
-import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
-import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
+import com.jrb.ticket_service.exception.base.BusinessException;
+import com.jrb.ticket_service.exception.base.ErrorResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler(HallNotFoundException.class)
-    public ResponseEntity<ErrorDTO> hallNotFoundHaldler(HallNotFoundException ex) {
-        ErrorDTO response = new ErrorDTO(ex.getMessage(), new Date());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+        ErrorResponse response = new ErrorResponse(
+                ex.getErrorCode().getCode(),
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(response, ex.getStatus());
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
@@ -34,31 +37,5 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorDTO> missmatchType(HttpMessageNotReadableException ex) {
         ErrorDTO response = new ErrorDTO("Error attributes type", new Date());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(SeatIsReservedException.class)
-    public ResponseEntity<ErrorDTO> seatReserve(SeatIsReservedException ex) {
-        ErrorDTO response = new ErrorDTO("The seat is reserved", new Date());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    // Movies
-    @ExceptionHandler(MovieNotFoundException.class)
-    public ResponseEntity<ErrorDTO> movieNotFound(MovieNotFoundException ex) {
-        ErrorDTO response = new ErrorDTO("Movie not found", new Date());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    // Showtime
-    @ExceptionHandler(ShowtimeNotFoundException.class)
-    public ResponseEntity<ErrorDTO> showtimeNotFound(ShowtimeNotFoundException ex) {
-        ErrorDTO response = new ErrorDTO("Showtime not found", new Date());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ShowtimeScheduleConflictException.class)
-    public ResponseEntity<ErrorDTO> showtimeHasColisition(ShowtimeScheduleConflictException ex) {
-        ErrorDTO response = new ErrorDTO("Has a colisition with other showtime", new Date());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
