@@ -10,6 +10,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -71,6 +72,17 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 null);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    // 4. Método HTTP no permitido (ej: POST donde debe ser GET)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "METHOD_NOT_ALLOWED",
+                String.format("HTTP method %s is not supported for this endpoint.", ex.getMethod()),
+                LocalDateTime.now(),
+                null);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
