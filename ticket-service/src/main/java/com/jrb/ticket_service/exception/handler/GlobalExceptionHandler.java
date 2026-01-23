@@ -20,6 +20,9 @@ import com.jrb.ticket_service.dtos.ErrorDTO;
 import com.jrb.ticket_service.exception.base.BusinessException;
 import com.jrb.ticket_service.exception.base.ErrorResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -85,9 +88,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
     }
 
-    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ResponseEntity<ErrorDTO> missingAttributes(InvalidDataAccessApiUsageException ex) {
-        ErrorDTO response = new ErrorDTO("Error body attributes", new Date());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    // 5. Captura genérica (Capa de seguridad para errores no previstos)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
+        log.debug(ex.toString());
+        ErrorResponse response = new ErrorResponse(
+                "INTERNAL_SERVER_ERROR",
+                "An unexpected error occurred. Please contact support.",
+                LocalDateTime.now(),
+                null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
