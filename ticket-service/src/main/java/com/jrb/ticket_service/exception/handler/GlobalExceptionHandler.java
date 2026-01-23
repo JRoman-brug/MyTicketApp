@@ -15,7 +15,7 @@ import com.jrb.ticket_service.exception.base.BusinessException;
 import com.jrb.ticket_service.exception.base.ErrorResponse;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
