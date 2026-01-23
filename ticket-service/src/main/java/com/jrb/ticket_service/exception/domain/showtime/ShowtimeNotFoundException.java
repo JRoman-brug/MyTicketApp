@@ -1,16 +1,13 @@
 package com.jrb.ticket_service.exception.domain.showtime;
 
+import org.springframework.http.HttpStatus;
+
+import com.jrb.ticket_service.exception.base.BusinessException;
 import com.jrb.ticket_service.exception.base.ErrorCode;
 
-public class ShowtimeNotFoundException extends RuntimeException {
-    private final ErrorCode errorCode;
+public class ShowtimeNotFoundException extends BusinessException {
 
-    public ShowtimeNotFoundException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
+    public ShowtimeNotFoundException(Long id) {
+        super("Showtime not found, ID:" + id, ErrorCode.SHOWTIME_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }

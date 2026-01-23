@@ -11,7 +11,6 @@ import com.jrb.ticket_service.dtos.MovieDTOs;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Movie;
 import com.jrb.ticket_service.entity.Showtime;
-import com.jrb.ticket_service.exception.base.ErrorCode;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
@@ -41,7 +40,7 @@ public class ShowtimeService {
     public ShowtimeDTOs.Response getShowtime(Long id) {
         log.debug("Fechting showtime with ID: {}", id);
         Showtime showtime = showTimeRepository.findById(id)
-                .orElseThrow(() -> new ShowtimeNotFoundException(ErrorCode.SHOWTIME_NOT_FOUND));
+                .orElseThrow(() -> new ShowtimeNotFoundException(id));
         return createReposnResponseDTO(showtime.getStartTime(), showtime.getHall(), showtime.getMovie());
     }
 
@@ -100,7 +99,7 @@ public class ShowtimeService {
         Showtime showtimeToUpdate = showTimeRepository.findById(request.id())
                 .orElseThrow(() -> {
                     log.warn("Update failed. Showtime with ID {} not found", request.id());
-                    return new ShowtimeNotFoundException(ErrorCode.SHOWTIME_NOT_FOUND);
+                    return new ShowtimeNotFoundException(request.id());
                 });
 
         if (request.hallId() != null) {
@@ -124,7 +123,7 @@ public class ShowtimeService {
         log.info("Request to delete showtime with ID {}", id);
         showTimeRepository.findById(id).orElseThrow(() -> {
             log.warn("Delete failed. Showtime with ID {} not found", id);
-            return new ShowtimeNotFoundException(ErrorCode.SHOWTIME_NOT_FOUND);
+            return new ShowtimeNotFoundException(id);
         });
         showTimeRepository.deleteById(id);
         log.info("Showtime with ID {} delete successfully.", id);
