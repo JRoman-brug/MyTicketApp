@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.HallDTOs;
@@ -14,6 +12,8 @@ import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Seat;
 import com.jrb.ticket_service.exception.ErrorCode;
 import com.jrb.ticket_service.exception.HallNotFound;
+import com.jrb.ticket_service.mapper.HallMapper;
+import com.jrb.ticket_service.mapper.SeatMapper;
 import com.jrb.ticket_service.repository.HallRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class HallService {
     private HallRepository hallRepository;
-    private Logger logger = LoggerFactory.getLogger(HallService.class);
+    private HallMapper hallMapper;
+    private SeatMapper seatMapper;
 
-    public HallService(HallRepository hallRepository) {
+    public HallService(HallRepository hallRepository, HallMapper hallMapper, SeatMapper seatMapper) {
         this.hallRepository = hallRepository;
+        this.hallMapper = hallMapper;
+        this.seatMapper = seatMapper;
     }
 
     // [
@@ -33,23 +36,11 @@ public class HallService {
     // ["X"," ","X"]
     // ]
     public HallDTOs.Response createHall(HallDTOs.CreateRequest dto) {
-        String label = dto.name();
-        int columns = dto.totalColumns();
-        int rows = dto.totalRows();
+        Hall newHall = hallMapper.toEntity(dto);
         List<Seat> seats = seatResolver(dto.schema(), dto.rowLabels(), dto.columnLabels());
-        Hall newHall = Hall.builder()
-                .name(label)
-                .totalRows(rows)
-                .totalColumns(columns)
-                .build();
         newHall.addSeats(seats);
         Hall savedHall = hallRepository.save(newHall);
-        return new HallDTOs.Response(
-                savedHall.getId(),
-                savedHall.getName(),
-                savedHall.getTotalRows(),
-                savedHall.getTotalColumns(),
-                mapper(savedHall.getSeats()));
+        return hallMapper.toResponse(savedHall);
     }
 
     private List<Seat> seatResolver(List<List<String>> schema, List<String> rowLabels, List<String> columnsLabels) {
@@ -78,23 +69,17 @@ public class HallService {
     }
 
     private String getLabel(String rowLabel, String columnLabel) {
-        logger.debug("Seat label created: {}{}", columnLabel, rowLabel);
+        log.debug("Seat label created: {}{}", columnLabel, rowLabel);
         return columnLabel + rowLabel;
     }
 
     public HallDTOs.Response getHall(Long id) {
         Hall hall = hallRepository.findById(id).orElseThrow(() -> new HallNotFound(ErrorCode.HALL_NOT_FOUND));
-        String label = hall.getName();
-        int rows = hall.getTotalRows();
-        int columns = hall.getTotalColumns();
-        List<SeatDTOs.Summary> seats = mapper(hall.getSeats());
-        return new HallDTOs.Response(id, label, rows, columns, seats);
+        return hallMapper.toResponse(hall);
     }
 
     public List<SeatDTOs.Summary> mapper(List<Seat> seats) {
-        return seats.stream().map(seat -> new SeatDTOs.Summary(
-                seat.getId(),
-                seat.getLabel()))
+        return seats.stream().map(seatMapper::toSummary)
                 .toList();
     }
 
