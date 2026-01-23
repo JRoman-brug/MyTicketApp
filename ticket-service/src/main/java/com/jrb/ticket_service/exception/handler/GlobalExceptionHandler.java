@@ -63,15 +63,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleReadableException(HttpMessageNotReadableException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "MALFORMED_JSON",
+                "The request body is unreadable or has invalid formats.",
+                LocalDateTime.now(),
+                null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     public ResponseEntity<ErrorDTO> missingAttributes(InvalidDataAccessApiUsageException ex) {
         ErrorDTO response = new ErrorDTO("Error body attributes", new Date());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorDTO> missmatchType(HttpMessageNotReadableException ex) {
-        ErrorDTO response = new ErrorDTO("Error attributes type", new Date());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
