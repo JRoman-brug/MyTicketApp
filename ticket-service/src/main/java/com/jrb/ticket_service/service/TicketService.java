@@ -47,7 +47,7 @@ public class TicketService {
 
         Ticket newTicket = Ticket.builder()
                 .seat(seat)
-                .status(TicketStatus.RESERVE)
+                .status(TicketStatus.PENDING)
                 .showtime(showtime)
                 .build();
         Ticket savedTicket = ticketRepository.save(newTicket);
