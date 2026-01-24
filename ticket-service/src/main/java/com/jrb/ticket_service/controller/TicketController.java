@@ -8,7 +8,6 @@ import com.jrb.ticket_service.service.TicketService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,9 +33,9 @@ public class TicketController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{ticketId}")
+    @PostMapping("/{ticketId}")
     public ResponseEntity<Void> deleteTicket(@PathVariable Long ticketId) {
-        ticketService.deleteTicket(ticketId);
+        ticketService.cancelTicket(ticketId);
         return ResponseEntity.noContent().build();
     }
 }

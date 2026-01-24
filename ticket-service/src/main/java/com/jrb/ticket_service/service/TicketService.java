@@ -85,11 +85,12 @@ public class TicketService {
         return ticketMapper.toResponse(savedTicket);
     }
 
-    public void deleteTicket(Long ticketId) {
-        log.info("Requese to delete ticket with ID: {}", ticketId);
+    public void cancelTicket(Long ticketId) {
+        log.info("Request to cancel ticket with ID: {}", ticketId);
         Ticket ticket = findTicketOrThrow(ticketId);
-        ticketRepository.delete(ticket);
-        log.info("Ticket successfully deleted");
+        ticket.setStatus(TicketStatus.CANCELLED);
+        ticketRepository.save(ticket);
+        log.info("Ticket successfully cancel");
 
     }
 
