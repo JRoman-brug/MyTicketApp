@@ -4,5 +4,5 @@ public enum TicketStatus {
     OCCUPIED,
     RESERVE,
     AVAILABLE,
-
+    CONFIRMED
 }

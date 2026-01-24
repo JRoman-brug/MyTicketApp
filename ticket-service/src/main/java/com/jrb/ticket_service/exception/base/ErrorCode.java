@@ -13,7 +13,8 @@ public enum ErrorCode {
     SHOWTIME_NOT_FOUND("ERR-005", "The showtime no exist"),
     SHOWTIME_SCHEDULE_CONFLICT("ERR-006", "The showtime has a colisition with other showtime"),
     SEAT_NOT_BELONGS_TO_HALL("ERR-007", "The seat not belongs to hall"),
-    SEAT_IS_ALREADY_OCUPPIED("ERR-008", "The seat is already ocuppied");
+    SEAT_IS_ALREADY_OCUPPIED("ERR-008", "The seat is already ocuppied"),
+    TICKET_NOT_FOUND("ERR-008", "The seat is already ocuppied");
 
     private String code;
     private String message;
