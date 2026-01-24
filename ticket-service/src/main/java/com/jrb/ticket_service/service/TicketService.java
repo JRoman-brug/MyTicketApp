@@ -85,6 +85,14 @@ public class TicketService {
         return ticketMapper.toResponse(savedTicket);
     }
 
+    public void deleteTicket(Long ticketId) {
+        log.info("Requese to delete ticket with ID: {}", ticketId);
+        Ticket ticket = findTicketOrThrow(ticketId);
+        ticketRepository.delete(ticket);
+        log.info("Ticket successfully deleted");
+
+    }
+
     private Ticket findTicketOrThrow(Long tickeId) {
         return ticketRepository.findById(tickeId).orElseThrow(() -> new TicketNotFound(tickeId));
     }
