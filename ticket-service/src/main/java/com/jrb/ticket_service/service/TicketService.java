@@ -19,6 +19,9 @@ import com.jrb.ticket_service.repository.SeatRepository;
 import com.jrb.ticket_service.repository.ShowTimeRepository;
 import com.jrb.ticket_service.repository.TicketRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TicketService {
     private TicketRepository ticketRepository;
@@ -36,6 +39,7 @@ public class TicketService {
 
     @Transactional
     public TicketDTOs.Response reservateTicket(TicketDTOs.ReservationRequest request) {
+        log.info("Request to reserve a ticket with showtimeId: {}", request.showtimeId());
         Showtime showtime = findShowtimeOrThrow(request.showtimeId());
         Seat seat = findSeatOrThrow(request.seatId());
         validateSeatBelongsToHall(showtime.getHall(), seat.getId());
@@ -47,6 +51,7 @@ public class TicketService {
                 .showtime(showtime)
                 .build();
         Ticket savedTicket = ticketRepository.save(newTicket);
+        log.debug("Ticket create successfully with ID: {}", savedTicket.getId());
         return ticketMapper.toResponse(savedTicket);
     }
 
@@ -72,9 +77,11 @@ public class TicketService {
     }
 
     public TicketDTOs.Response confirmReservation(Long ticketId) {
+        log.info("Request to confirm ticket with id: {}", ticketId);
         Ticket ticket = findTicketOrThrow(ticketId);
         ticket.setStatus(TicketStatus.CONFIRMED);
         Ticket savedTicket = ticketRepository.save(ticket);
+        log.info("Confirmation succefully");
         return ticketMapper.toResponse(savedTicket);
     }
 
