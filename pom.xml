@@ -22,7 +22,6 @@
     </properties>
 
     <modules>
-        <module>auth-service</module>
         <module>ticket-service</module>
     </modules>
 
