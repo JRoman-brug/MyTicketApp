@@ -1,12 +1,17 @@
-import CinemaPage from "@/pages/CinemaPage";
-import { Route, Routes } from "react-router-dom";
+import MoviePage from '@/pages/(admin)/movies/MoviePage';
+import RootLayout from '@/pages/RootLayout';
+import { createBrowserRouter } from 'react-router-dom';
 
-function AppRoute() {
-  return (
-    <Routes>
-      <Route path="/cinema/:hallId" Component={CinemaPage} />
-    </Routes>
-  );
-}
-
-export default AppRoute;
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />, // <--- AQUI APLICAS EL LAYOUT
+    children: [
+      {
+        path: '/movies',
+        element: <MoviePage />,
+      },
+      // ... el resto de tus rutas
+    ],
+  },
+]);
