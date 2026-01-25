@@ -71,6 +71,16 @@ WORKDIR /build
 
 RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
 
+FROM extract AS development
+WORKDIR /build
+RUN cp -r /build/target/extracted/dependencies/. ./
+RUN cp -r /build/target/extracted/spring-boot-loader/. ./
+RUN cp -r /build/target/extracted/snapshot-dependencies/. ./
+RUN cp -r /build/target/extracted/application/. ./
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000
+CMD [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
+
+
 ################################################################################
 
 # Create a new stage for running the application that contains the minimal

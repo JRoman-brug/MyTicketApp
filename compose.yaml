@@ -12,8 +12,10 @@ services:
     build:
       context: .
       dockerfile: ticket-service/Dockerfile
+      target: development
     ports:
       - 8080:8080
+      - 8000:8000
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-ticket-service:5432/tickets_db
       - SPRING_DATASOURCE_USERNAME=admin
@@ -23,6 +25,10 @@ services:
     depends_on:
       db-ticket-service:
         condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: .
 
   db-ticket-service:
     image: postgres:18-alpine
