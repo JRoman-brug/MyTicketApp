@@ -14,7 +14,7 @@ function MoviePage() {
     setCurrentPage(currentPage + 1);
   };
   return (
-    <div className="h-screen">
+    <div className="h-screen p-4">
       <MovieTable movies={movies?.content} />
       <Button onPress={handlePaginatino}>Next</Button>
     </div>
