@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.MovieDTOs;
+import com.jrb.ticket_service.dtos.PageResponse;
 import com.jrb.ticket_service.entity.Movie;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.mapper.MovieMapper;

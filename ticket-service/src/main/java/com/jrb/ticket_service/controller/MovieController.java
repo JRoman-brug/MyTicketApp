@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.ticket_service.dtos.MovieDTOs;
+import com.jrb.ticket_service.dtos.PageResponse;
 import com.jrb.ticket_service.service.MovieService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,10 +37,13 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<MovieDTOs.Response>> getAllMovies(
+    public ResponseEntity<PageResponse<MovieDTOs.Response>> getAllMovies(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<MovieDTOs.Response> response = movieService.getAllMovies(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request) {
+        Page<MovieDTOs.Response> moviePage = movieService.getAllMovies(page, size);
+        String baseUrl = request.getRequestURL().toString();
+        PageResponse<MovieDTOs.Response> response = new PageResponse<>(moviePage, baseUrl);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
