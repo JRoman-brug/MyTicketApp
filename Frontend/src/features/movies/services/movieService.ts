@@ -1,9 +1,23 @@
 import { api } from '@/lib/axios';
-import type { CreateMovieDTO, UpdateMovieDTO } from '../types/movieType';
+import type {
+  CreateMovieDTO,
+  MovieType,
+  UpdateMovieDTO,
+} from '../types/movieType';
+import type { PaginatedResponse } from '@/common/types';
 
 export const movieService = {
   getMovie: async (movieId: number) => {
     const { data } = await api.get(`/movies/${movieId}`);
+    return data;
+  },
+  getAllMovies: async (page: number, size: number) => {
+    const { data } = await api.get<PaginatedResponse<MovieType>>(`/movies`, {
+      params: {
+        page,
+        size,
+      },
+    });
     return data;
   },
 
