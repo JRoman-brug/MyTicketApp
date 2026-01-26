@@ -4,7 +4,8 @@ import { movieKeys } from './keys';
 
 export const useDeleteMovie = () => {
   const queryClient = useQueryClient();
-  useMutation({
+
+  const mutation = useMutation({
     mutationFn: (id: number) => movieService.deleteMovie(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: movieKeys.lists() });
@@ -14,7 +15,10 @@ export const useDeleteMovie = () => {
       console.log(error);
     },
   });
+
   return {
-    deleteMovie: useMutation,
+    deleteMovie: mutation.mutate,
+    isPending: mutation.isPending,
+    isError: mutation.isError,
   };
 };

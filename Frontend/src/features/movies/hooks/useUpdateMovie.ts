@@ -5,7 +5,7 @@ import { movieKeys } from './keys';
 
 export const useUpdateMovie = () => {
   const queryClient = useQueryClient();
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: (data: UpdateMovieDTO) => movieService.updateMovie(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: movieKeys.lists() });
@@ -15,4 +15,10 @@ export const useUpdateMovie = () => {
       console.log(error);
     },
   });
+  return {
+    updateMovie: mutation.mutate,
+    isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
 };
