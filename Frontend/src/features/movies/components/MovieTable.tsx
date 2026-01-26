@@ -9,6 +9,7 @@ import {
 import { useCallback, type Key } from 'react';
 import type { MovieType } from '../types/movieType';
 import MovieAction from './MovieActions';
+import MovieTableHeader from './MovieTableHeader';
 
 const columns = [
   { name: 'Name', uid: 'NAME' },
@@ -35,7 +36,11 @@ function MovieTable({ movies }: MovieTableProps) {
   }, []);
 
   return (
-    <Table aria-label="Table to manage movies">
+    <Table
+      topContent={<MovieTableHeader />}
+      topContentPlacement="outside"
+      aria-label="Table to manage movies"
+    >
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
