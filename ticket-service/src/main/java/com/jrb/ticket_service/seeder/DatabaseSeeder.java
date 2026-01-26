@@ -6,14 +6,21 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.jrb.ticket_service.dtos.HallDTOs;
+import com.jrb.ticket_service.entity.Movie;
+import com.jrb.ticket_service.repository.MovieRepository;
 import com.jrb.ticket_service.service.HallService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
     private HallService hallService;
+    private MovieRepository movieRepository;
 
-    public DatabaseSeeder(HallService hallService) {
+    public DatabaseSeeder(HallService hallService, MovieRepository movieRepository) {
         this.hallService = hallService;
+        this.movieRepository = movieRepository;
     }
 
     @Override
@@ -21,6 +28,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         smallHall();
         mediumHall();
         largeHall();
+        movieSeeder();
     }
 
     public void smallHall() {
@@ -70,5 +78,32 @@ public class DatabaseSeeder implements CommandLineRunner {
         HallDTOs.CreateRequest request = new HallDTOs.CreateRequest(label, rows, columns, rowLabels, columnLabels,
                 schema);
         hallService.createHall(request);
+    }
+
+    public void movieSeeder() {
+
+        if (movieRepository.count() == 0) { // Solo inserta si la tabla está vacía
+            List<Movie> movies = List.of(
+                    new Movie(null, "Inception", 148,
+                            "https://image.tmdb.org/t/p/w500/edv5bs1pSdfS2SIsT6DwTndmdfR.jpg"),
+                    new Movie(null, "The Matrix", 136,
+                            "https://image.tmdb.org/t/p/w500/f89U3Y9YvYvwpovpkZZCc6uY9Ld.jpg"),
+                    new Movie(null, "Interstellar", 169,
+                            "https://image.tmdb.org/t/p/w500/gEU2QniE6E7oBvsku9fSnd2S3qa.jpg"),
+                    new Movie(null, "Pulp Fiction", 154,
+                            "https://image.tmdb.org/t/p/w500/d5iIl9h9btztU0kz5v9viCHY9uT.jpg"),
+                    new Movie(null, "The Godfather", 175,
+                            "https://image.tmdb.org/t/p/w500/3bhkrj0vU686S0X79R9Ma6o7m9n.jpg"),
+                    new Movie(null, "Spider-Man: Across the Spider-Verse", 140,
+                            "https://image.tmdb.org/t/p/w500/8Vt6mO96Jm9pjaPLgDuvL--pXIK.jpg"),
+                    new Movie(null, "Parasite", 132, "https://image.tmdb.org/t/p/w500/7IiTTj0CcBSo7fulCOyiTH9szvE.jpg"),
+                    new Movie(null, "The Dark Knight", 152,
+                            "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDp9QmSbmM949O9vBTp.jpg"),
+                    new Movie(null, "Fight Club", 139,
+                            "https://image.tmdb.org/t/p/w500/pB8BM79vU7vSzao6ePgoihzhZDx.jpg"),
+                    new Movie(null, "Seven", 127, "https://image.tmdb.org/t/p/w500/69Sns8o3S3q6z78FkARQGAC9YS3.jpg"));
+            movieRepository.saveAll(movies);
+            log.info("Movies were uploaded succesfully");
+        }
     }
 }
