@@ -9,3 +9,5 @@ const baseMovieSchema = z.object({
 export const createdMovieSchema = baseMovieSchema.omit({
   id: true,
 });
+
+export type CreatedMovieData = z.infer<typeof createdMovieSchema>;

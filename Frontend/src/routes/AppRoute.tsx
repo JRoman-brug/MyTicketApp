@@ -1,3 +1,4 @@
+import CreateMoviePage from '@/pages/(admin)/movies/createMovie/CreateMoviePage';
 import MoviePage from '@/pages/(admin)/movies/MoviePage';
 import RootLayout from '@/pages/RootLayout';
 import { createBrowserRouter } from 'react-router-dom';
@@ -5,13 +6,21 @@ import { createBrowserRouter } from 'react-router-dom';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayout />, // <--- AQUI APLICAS EL LAYOUT
+    element: <RootLayout />,
     children: [
       {
-        path: '/movies',
-        element: <MoviePage />,
+        path: 'movies',
+        children: [
+          {
+            index: true,
+            element: <MoviePage />,
+          },
+          {
+            path: 'create',
+            element: <CreateMoviePage />,
+          },
+        ],
       },
-      // ... el resto de tus rutas
     ],
   },
 ]);
