@@ -6,9 +6,11 @@ import {
   type CreatedMovieData,
 } from '../schemas/movieSchema';
 import { useCreateMovie } from '../hooks/useCreateMovie';
+import { useNavigate } from 'react-router-dom';
 
 function CreateMovieFrom() {
   const { createMovie } = useCreateMovie();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,11 +22,15 @@ function CreateMovieFrom() {
   const onSubmit = (data: CreatedMovieData) => {
     console.log('Datos válidos:', data);
     createMovie({ ...data });
+    navigate('/movies');
     console.log('Uploading data:');
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="w-1/2">
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-1/2 flex flex-col items-center"
+    >
       <Input
         label="Name"
         {...register('name')}
@@ -44,7 +50,7 @@ function CreateMovieFrom() {
         errorMessage={errors.posterUrl?.message}
       />
       <Button type="submit" isLoading={isSubmitting} color="primary">
-        Guardar Película
+        Save movie
       </Button>
     </Form>
   );
