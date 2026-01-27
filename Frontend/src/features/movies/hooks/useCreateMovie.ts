@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export const useCreateMovie = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: (data: CreateMovieDTO) => movieService.createMovie(data),
     onSuccess: () => {
       console.log('Movie created successfully.');
@@ -17,4 +17,10 @@ export const useCreateMovie = () => {
       console.error(error);
     },
   });
+  return {
+    createMovie: mutation.mutate,
+    isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
 };
