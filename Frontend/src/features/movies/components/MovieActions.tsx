@@ -1,6 +1,7 @@
 import { Button } from '@heroui/react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useDeleteMovie } from '../hooks/useDeleteMovie';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface MovieActionProps {
   readonly movieId: number;
@@ -15,15 +16,23 @@ function MovieAction({ movieId }: MovieActionProps) {
   };
   return (
     <>
-      <Button
-        isIconOnly
-        aria-label={`Delete movie with ID: ${movieId}`}
-        color="danger"
-        className="mr-2"
-        onPress={deleteHandler}
+      <ConfirmModal
+        title="Delete movie"
+        bodyText={'Are you sure to delete this movie'}
+        action={deleteHandler}
       >
-        <Trash2 />
-      </Button>
+        {(onOpen) => (
+          <Button
+            isIconOnly
+            aria-label={`Delete movie with ID: ${movieId}`}
+            color="danger"
+            className="mr-2"
+            onPress={onOpen}
+          >
+            <Trash2 />
+          </Button>
+        )}
+      </ConfirmModal>
       <Button
         isIconOnly
         aria-label={`Edit movie with ID: ${movieId}`}
