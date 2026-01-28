@@ -3,6 +3,9 @@ package com.jrb.ticket_service.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
@@ -14,6 +17,7 @@ import com.jrb.ticket_service.entity.Showtime;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
+import com.jrb.ticket_service.mapper.ShowtimeMapper;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 import com.jrb.ticket_service.repository.HallRepository;
 import com.jrb.ticket_service.repository.MovieRepository;
@@ -29,12 +33,14 @@ public class ShowtimeService {
     private ShowTimeRepository showTimeRepository;
     private HallRepository hallRepository;
     private MovieRepository movieRepository;
+    private ShowtimeMapper showtimeMapper;
 
     public ShowtimeService(ShowTimeRepository showTimeRepository, HallRepository hallRepository,
-            MovieRepository movieRepository) {
+            MovieRepository movieRepository, ShowtimeMapper showtimeMapper) {
         this.showTimeRepository = showTimeRepository;
         this.hallRepository = hallRepository;
         this.movieRepository = movieRepository;
+        this.showtimeMapper = showtimeMapper;
     }
 
     public ShowtimeDTOs.Response getShowtime(Long id) {
@@ -42,6 +48,13 @@ public class ShowtimeService {
         Showtime showtime = showTimeRepository.findById(id)
                 .orElseThrow(() -> new ShowtimeNotFoundException(id));
         return createReposnResponseDTO(showtime.getStartTime(), showtime.getHall(), showtime.getMovie());
+    }
+
+    public Page<ShowtimeDTOs.Response> getAllShowtime(int page, int size) {
+        log.debug("Fechting all showtimes");
+        Pageable newPage = PageRequest.of(page, size);
+        Page<Showtime> showtimePage = showTimeRepository.findAll(newPage);
+        return showtimePage.map(showtimeMapper::toResponse);
     }
 
     public ShowtimeDTOs.Response createShowtime(ShowtimeDTOs.CreateRequest request) {
