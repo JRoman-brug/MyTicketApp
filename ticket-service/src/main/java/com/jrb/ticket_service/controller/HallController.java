@@ -16,7 +16,6 @@ import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.service.HallService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @RestController
