@@ -5,7 +5,8 @@ public class SeatDTOs {
             Long id,
             int row,
             int column,
-            String label) {
+            String label,
+            boolean isAvailable) {
     }
 
     public record Summary(Long id, String label) {
