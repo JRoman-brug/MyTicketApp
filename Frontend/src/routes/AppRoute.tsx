@@ -1,4 +1,5 @@
 import CreateMoviePage from '@/pages/(admin)/movies/createMovie/CreateMoviePage';
+import EditMoviePage from '@/pages/(admin)/movies/editMovie/EditMoviePage';
 import MoviePage from '@/pages/(admin)/movies/MoviePage';
 import RootLayout from '@/pages/RootLayout';
 import { createBrowserRouter } from 'react-router-dom';
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
           {
             path: 'create',
             element: <CreateMoviePage />,
+          },
+          {
+            path: 'edit/:id',
+            element: <EditMoviePage />,
           },
         ],
       },

@@ -2,17 +2,19 @@ import { Button } from '@heroui/react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useDeleteMovie } from '../hooks/useDeleteMovie';
 import ConfirmModal from '@/components/ConfirmModal';
+import { useNavigate } from 'react-router-dom';
 
 interface MovieActionProps {
   readonly movieId: number;
 }
 function MovieAction({ movieId }: MovieActionProps) {
+  const navigate = useNavigate();
   const { deleteMovie } = useDeleteMovie();
   const deleteHandler = () => {
     deleteMovie(movieId);
   };
   const editHandler = () => {
-    console.log('Edit movie with id', movieId);
+    navigate(`edit/${movieId}`);
   };
   return (
     <>
