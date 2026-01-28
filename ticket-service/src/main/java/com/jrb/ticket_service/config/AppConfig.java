@@ -18,7 +18,7 @@ public class AppConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
 
         // Métodos HTTP que vas a permitir
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"));
 
         // Cabeceras permitidas (Authorization es vital si usas JWT)
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
