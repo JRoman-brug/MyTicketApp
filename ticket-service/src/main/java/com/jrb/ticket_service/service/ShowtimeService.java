@@ -72,11 +72,11 @@ public class ShowtimeService {
         return getSeatStatus(tickets, seats);
     }
 
-    public Showtime findShowtimeOrThrow(Long id) {
+    private Showtime findShowtimeOrThrow(Long id) {
         return showTimeRepository.findById(id).orElseThrow(() -> new ShowtimeNotFoundException(id));
     }
 
-    public List<SeatDTOs.Response> getSeatStatus(List<Ticket> tickets, List<Seat> seats) {
+    private List<SeatDTOs.Response> getSeatStatus(List<Ticket> tickets, List<Seat> seats) {
         Set<Long> set = tickets.stream().map(ticket -> ticket.getSeat().getId()).collect(Collectors.toSet());
         return seats.stream().map(seat -> {
             boolean isAvailable = set.contains(seat.getId());
