@@ -2,6 +2,8 @@ package com.jrb.ticket_service.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,12 +13,16 @@ import org.springframework.stereotype.Service;
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
 import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.dtos.MovieDTOs;
+import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Movie;
+import com.jrb.ticket_service.entity.Seat;
 import com.jrb.ticket_service.entity.Showtime;
+import com.jrb.ticket_service.entity.Ticket;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
+import com.jrb.ticket_service.mapper.SeatMapper;
 import com.jrb.ticket_service.mapper.ShowtimeMapper;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 import com.jrb.ticket_service.repository.HallRepository;
@@ -34,13 +40,15 @@ public class ShowtimeService {
     private HallRepository hallRepository;
     private MovieRepository movieRepository;
     private ShowtimeMapper showtimeMapper;
+    private SeatMapper seatMapper;
 
     public ShowtimeService(ShowTimeRepository showTimeRepository, HallRepository hallRepository,
-            MovieRepository movieRepository, ShowtimeMapper showtimeMapper) {
+            MovieRepository movieRepository, ShowtimeMapper showtimeMapper, SeatMapper seatMapper) {
         this.showTimeRepository = showTimeRepository;
         this.hallRepository = hallRepository;
         this.movieRepository = movieRepository;
         this.showtimeMapper = showtimeMapper;
+        this.seatMapper = seatMapper;
     }
 
     public ShowtimeDTOs.Response getShowtime(Long id) {
@@ -55,6 +63,25 @@ public class ShowtimeService {
         Pageable newPage = PageRequest.of(page, size);
         Page<Showtime> showtimePage = showTimeRepository.findAll(newPage);
         return showtimePage.map(showtimeMapper::toResponse);
+    }
+
+    public List<SeatDTOs.Response> getSeatStatusByShowtimeId(Long showtimeId) {
+        Showtime showtime = findShowtimeOrThrow(showtimeId);
+        List<Seat> seats = showtime.getHall().getSeats();
+        List<Ticket> tickets = showtime.getTickets();
+        return getSeatStatus(tickets, seats);
+    }
+
+    public Showtime findShowtimeOrThrow(Long id) {
+        return showTimeRepository.findById(id).orElseThrow(() -> new ShowtimeNotFoundException(id));
+    }
+
+    public List<SeatDTOs.Response> getSeatStatus(List<Ticket> tickets, List<Seat> seats) {
+        Set<Long> set = tickets.stream().map(ticket -> ticket.getSeat().getId()).collect(Collectors.toSet());
+        return seats.stream().map(seat -> {
+            boolean isAvailable = set.contains(seat.getId());
+            return seatMapper.toResponse(seat, isAvailable);
+        }).toList();
     }
 
     public ShowtimeDTOs.Response createShowtime(ShowtimeDTOs.CreateRequest request) {
