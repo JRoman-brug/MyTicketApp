@@ -1,11 +1,14 @@
 package com.jrb.ticket_service.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.ticket_service.dtos.PageResponse;
+import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
 import com.jrb.ticket_service.service.ShowtimeService;
 
@@ -44,6 +47,12 @@ public class ShowtimeController {
         String baseUrl = request.getRequestURL().toString();
         PageResponse<ShowtimeDTOs.Response> response = new PageResponse<>(allShowtimes, baseUrl);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("{showtimeId}/seatStatus")
+    public ResponseEntity<List<SeatDTOs.Response>> getSeatStatusByShowtimeId(@PathVariable Long showtimeId) {
+        List<SeatDTOs.Response> response = showtimeService.getSeatStatusByShowtimeId(showtimeId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
