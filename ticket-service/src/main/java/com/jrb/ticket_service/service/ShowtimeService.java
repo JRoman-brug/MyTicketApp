@@ -42,8 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ShowtimeService {
     // TODO implement as envioriment variables
     private static final int CLEAN_TIME = 15;
-    private static final LocalTime openingTime = LocalTime.of(9, 0);
-    private static final LocalTime closingTime = LocalTime.MAX;
+    private static final LocalTime OPENING_TIME = LocalTime.of(0, 0);
+    private static final LocalTime CLOSING_TIME = LocalTime.of(23, 59);
 
     private ShowTimeRepository showTimeRepository;
     private HallRepository hallRepository;
@@ -107,26 +107,20 @@ public class ShowtimeService {
 
     private List<AvailableSlot> getAvailableSlots(List<Showtime> showtimes, LocalDate day) {
         List<AvailableSlot> availableSlots = new LinkedList<>();
-        LocalDateTime startTimePointer = day.atStartOfDay();
-        LocalDateTime endDay = day.atTime(LocalTime.MAX);
-
-        if (showtimes.isEmpty()) {
-            Long duration = Duration.between(startTimePointer, endDay).toMinutes();
-            availableSlots.add(new AvailableSlot(startTimePointer, endDay, duration));
-            return availableSlots;
-        }
+        LocalDateTime startTimePointer = LocalDateTime.of(day, OPENING_TIME);
+        LocalDateTime endDay = LocalDateTime.of(day, CLOSING_TIME);
 
         Showtime showtime;
+        boolean noColisition = false;
         for (int i = 0; i < showtimes.size(); i++) {
             showtime = showtimes.get(i);
-            if (startTimePointer.isEqual(showtime.getStartTime())) {
-                startTimePointer = getEndTimeFromShowtime(showtime);
-            } else {
+            noColisition = !startTimePointer.isEqual(showtime.getStartTime());
+            if (noColisition) {
                 AvailableSlot slot = new AvailableSlot(startTimePointer, showtime.getStartTime(),
                         getDurationBetween(startTimePointer, showtime.getStartTime()));
                 availableSlots.add(slot);
-                startTimePointer = getEndTimeFromShowtime(showtime);
             }
+            startTimePointer = getEndTimeFromShowtime(showtime);
         }
         // Last check
         if (!startTimePointer.equals(endDay)) {
