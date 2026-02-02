@@ -1,6 +1,10 @@
 package com.jrb.ticket_service.service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
+import com.jrb.ticket_service.dtos.ScheduleDTOs.AvailableSlot;
+import com.jrb.ticket_service.dtos.ScheduleDTOs.HallScheduleResponse;
 import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.dtos.MovieDTOs;
 import com.jrb.ticket_service.dtos.SeatDTOs;
@@ -34,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class ShowtimeService {
-    private static final long CLEAN_TIME = 15;
+    private static final int CLEAN_TIME = 15;
 
     private ShowTimeRepository showTimeRepository;
     private HallRepository hallRepository;
@@ -82,6 +88,63 @@ public class ShowtimeService {
             boolean isAvailable = set.contains(seat.getId());
             return seatMapper.toResponse(seat, isAvailable);
         }).toList();
+    }
+
+    public HallScheduleResponse getHallScheduling(Long hallId, LocalDate day) {
+        List<Showtime> showtimesScheduled = findAllShowtimeByHallIdAndDayOrthrow(hallId, day);
+        List<AvailableSlot> slots = getAvailableSlots(showtimesScheduled, day);
+        return new HallScheduleResponse(hallId, day, slots);
+    }
+
+    private List<Showtime> findAllShowtimeByHallIdAndDayOrthrow(Long hallId, LocalDate day) {
+        LocalDateTime startTime = day.atStartOfDay();
+        LocalDateTime endTime = startTime.plusHours(24);
+        return showTimeRepository.findByHallIdAndStartTimeBetween(hallId, startTime, endTime);
+    }
+
+    private List<AvailableSlot> getAvailableSlots(List<Showtime> showtimes, LocalDate day) {
+        List<AvailableSlot> availableSlots = new LinkedList<>();
+        LocalDateTime startTimePointer = day.atStartOfDay();
+        LocalDateTime endDay = day.atTime(LocalTime.MAX);
+
+        if (showtimes.isEmpty()) {
+            Long duration = Duration.between(startTimePointer, endDay).toMinutes();
+            availableSlots.add(new AvailableSlot(startTimePointer, endDay, duration));
+            return availableSlots;
+        }
+
+        Showtime showtime;
+        for (int i = 0; i < showtimes.size(); i++) {
+            showtime = showtimes.get(i);
+            if (startTimePointer.isEqual(showtime.getStartTime())) {
+                startTimePointer = getEndTimeFromShowtime(showtime);
+            } else {
+                AvailableSlot slot = new AvailableSlot(startTimePointer, showtime.getStartTime(),
+                        getDurationBetween(startTimePointer, showtime.getStartTime()));
+                availableSlots.add(slot);
+                startTimePointer = getEndTimeFromShowtime(showtime);
+            }
+        }
+        // Last check
+        if (!startTimePointer.equals(endDay)) {
+            AvailableSlot slot = new AvailableSlot(startTimePointer, endDay,
+                    getDurationBetween(startTimePointer, endDay));
+            availableSlots.add(slot);
+        }
+        return availableSlots;
+    }
+
+    private LocalDateTime getEndTimeFromShowtime(Showtime showtime) {
+        long showtimeDuration = getShowtimeDuration(showtime);
+        return showtime.getStartTime().plusMinutes(showtimeDuration);
+    }
+
+    private int getShowtimeDuration(Showtime showtime) {
+        return CLEAN_TIME + showtime.getMovie().getDuration();
+    }
+
+    private Long getDurationBetween(LocalDateTime start, LocalDateTime end) {
+        return Duration.between(start, end).toMinutes();
     }
 
     public ShowtimeDTOs.Response createShowtime(ShowtimeDTOs.CreateRequest request) {
