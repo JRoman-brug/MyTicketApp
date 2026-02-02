@@ -40,7 +40,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class ShowtimeService {
+    // TODO implement as envioriment variables
     private static final int CLEAN_TIME = 15;
+    private static final LocalTime openingTime = LocalTime.of(9, 0);
+    private static final LocalTime closingTime = LocalTime.MAX;
 
     private ShowTimeRepository showTimeRepository;
     private HallRepository hallRepository;
