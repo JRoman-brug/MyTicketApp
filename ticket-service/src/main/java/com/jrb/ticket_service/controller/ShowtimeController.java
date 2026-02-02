@@ -1,5 +1,6 @@
 package com.jrb.ticket_service.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrb.ticket_service.dtos.PageResponse;
+import com.jrb.ticket_service.dtos.ScheduleDTOs;
 import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
 import com.jrb.ticket_service.service.ShowtimeService;
@@ -52,6 +54,14 @@ public class ShowtimeController {
     @GetMapping("{showtimeId}/seatStatus")
     public ResponseEntity<List<SeatDTOs.Response>> getSeatStatusByShowtimeId(@PathVariable Long showtimeId) {
         List<SeatDTOs.Response> response = showtimeService.getSeatStatusByShowtimeId(showtimeId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/hallSchedule")
+    public ResponseEntity<ScheduleDTOs.HallScheduleResponse> getHallSchedule(
+            @RequestParam(required = true) Long hallId,
+            @RequestParam(required = true) LocalDate day) {
+        ScheduleDTOs.HallScheduleResponse response = showtimeService.getHallScheduling(hallId, day);
         return ResponseEntity.ok(response);
     }
 
