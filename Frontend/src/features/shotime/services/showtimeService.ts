@@ -8,9 +8,16 @@ import type {
 import type { CalendarDate } from '@internationalized/date';
 
 export const showtimeService = {
-  getAllShowtime: async () => {
-    const { data } =
-      await api.get<PaginatedResponse<ShowtimeDetailsType>>(`/showtimes`);
+  getAllShowtime: async (page: number, size: number) => {
+    const { data } = await api.get<PaginatedResponse<ShowtimeDetailsType>>(
+      `/showtimes`,
+      {
+        params: {
+          page,
+          size,
+        },
+      }
+    );
     return data;
   },
   getShowtimeById: async (showtimeId: number) => {
