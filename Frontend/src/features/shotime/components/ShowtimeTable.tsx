@@ -58,7 +58,7 @@ function ShowtimeTable({ showtimes }: ShowtimeTableProps) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={'No movies found'} items={showtimes || []}>
+      <TableBody emptyContent={'No showtime found'} items={showtimes || []}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
