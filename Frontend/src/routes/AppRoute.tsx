@@ -10,6 +10,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
+      ...showtimeRoutes,
       {
         path: 'movies',
         children: [
@@ -27,7 +28,6 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      ...showtimeRoutes,
     ],
   },
 ]);
