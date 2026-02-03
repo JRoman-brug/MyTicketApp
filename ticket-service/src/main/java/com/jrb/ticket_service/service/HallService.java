@@ -77,6 +77,11 @@ public class HallService {
         return hallMapper.toResponse(hall);
     }
 
+    public List<HallDTOs.Response> getAllHall() {
+        List<Hall> allHalls = hallRepository.findAll();
+        return allHalls.stream().map(hallMapper::toResponse).toList();
+    }
+
     public List<SeatDTOs.Summary> mapper(List<Seat> seats) {
         return seats.stream().map(seatMapper::toSummary)
                 .toList();

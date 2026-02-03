@@ -1,19 +1,35 @@
 package com.jrb.ticket_service.service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.ShowtimeDTOs;
+import com.jrb.ticket_service.dtos.ScheduleDTOs.AvailableSlot;
+import com.jrb.ticket_service.dtos.ScheduleDTOs.HallScheduleResponse;
 import com.jrb.ticket_service.dtos.HallDTOs;
 import com.jrb.ticket_service.dtos.MovieDTOs;
+import com.jrb.ticket_service.dtos.SeatDTOs;
 import com.jrb.ticket_service.entity.Hall;
 import com.jrb.ticket_service.entity.Movie;
+import com.jrb.ticket_service.entity.Seat;
 import com.jrb.ticket_service.entity.Showtime;
+import com.jrb.ticket_service.entity.Ticket;
 import com.jrb.ticket_service.exception.domain.hall.HallNotFoundException;
 import com.jrb.ticket_service.exception.domain.movie.MovieNotFoundException;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeScheduleConflictException;
+import com.jrb.ticket_service.mapper.SeatMapper;
+import com.jrb.ticket_service.mapper.ShowtimeMapper;
 import com.jrb.ticket_service.exception.domain.showtime.ShowtimeNotFoundException;
 import com.jrb.ticket_service.repository.HallRepository;
 import com.jrb.ticket_service.repository.MovieRepository;
@@ -24,17 +40,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class ShowtimeService {
-    private static final long CLEAN_TIME = 15;
+    // TODO implement as envioriment variables
+    private static final int CLEAN_TIME = 15;
+    private static final LocalTime OPENING_TIME = LocalTime.of(0, 0);
+    private static final LocalTime CLOSING_TIME = LocalTime.of(23, 59);
 
     private ShowTimeRepository showTimeRepository;
     private HallRepository hallRepository;
     private MovieRepository movieRepository;
+    private ShowtimeMapper showtimeMapper;
+    private SeatMapper seatMapper;
 
     public ShowtimeService(ShowTimeRepository showTimeRepository, HallRepository hallRepository,
-            MovieRepository movieRepository) {
+            MovieRepository movieRepository, ShowtimeMapper showtimeMapper, SeatMapper seatMapper) {
         this.showTimeRepository = showTimeRepository;
         this.hallRepository = hallRepository;
         this.movieRepository = movieRepository;
+        this.showtimeMapper = showtimeMapper;
+        this.seatMapper = seatMapper;
     }
 
     public ShowtimeDTOs.Response getShowtime(Long id) {
@@ -42,6 +65,83 @@ public class ShowtimeService {
         Showtime showtime = showTimeRepository.findById(id)
                 .orElseThrow(() -> new ShowtimeNotFoundException(id));
         return createReposnResponseDTO(showtime.getStartTime(), showtime.getHall(), showtime.getMovie());
+    }
+
+    public Page<ShowtimeDTOs.Response> getAllShowtime(int page, int size) {
+        log.debug("Fechting all showtimes");
+        Pageable newPage = PageRequest.of(page, size);
+        Page<Showtime> showtimePage = showTimeRepository.findAll(newPage);
+        return showtimePage.map(showtimeMapper::toResponse);
+    }
+
+    public List<SeatDTOs.Response> getSeatStatusByShowtimeId(Long showtimeId) {
+        Showtime showtime = findShowtimeOrThrow(showtimeId);
+        List<Seat> seats = showtime.getHall().getSeats();
+        List<Ticket> tickets = showtime.getTickets();
+        return getSeatStatus(tickets, seats);
+    }
+
+    private Showtime findShowtimeOrThrow(Long id) {
+        return showTimeRepository.findById(id).orElseThrow(() -> new ShowtimeNotFoundException(id));
+    }
+
+    private List<SeatDTOs.Response> getSeatStatus(List<Ticket> tickets, List<Seat> seats) {
+        Set<Long> set = tickets.stream().map(ticket -> ticket.getSeat().getId()).collect(Collectors.toSet());
+        return seats.stream().map(seat -> {
+            boolean isAvailable = set.contains(seat.getId());
+            return seatMapper.toResponse(seat, isAvailable);
+        }).toList();
+    }
+
+    public HallScheduleResponse getHallScheduling(Long hallId, LocalDate day) {
+        List<Showtime> showtimesScheduled = findAllShowtimeByHallIdAndDayOrthrow(hallId, day);
+        List<AvailableSlot> slots = getAvailableSlots(showtimesScheduled, day);
+        return new HallScheduleResponse(hallId, day, slots);
+    }
+
+    private List<Showtime> findAllShowtimeByHallIdAndDayOrthrow(Long hallId, LocalDate day) {
+        LocalDateTime startTime = day.atStartOfDay();
+        LocalDateTime endTime = startTime.plusHours(24);
+        return showTimeRepository.findByHallIdAndStartTimeBetween(hallId, startTime, endTime);
+    }
+
+    private List<AvailableSlot> getAvailableSlots(List<Showtime> showtimes, LocalDate day) {
+        List<AvailableSlot> availableSlots = new LinkedList<>();
+        LocalDateTime startTimePointer = LocalDateTime.of(day, OPENING_TIME);
+        LocalDateTime endDay = LocalDateTime.of(day, CLOSING_TIME);
+
+        Showtime showtime;
+        boolean noColisition = false;
+        for (int i = 0; i < showtimes.size(); i++) {
+            showtime = showtimes.get(i);
+            noColisition = !startTimePointer.isEqual(showtime.getStartTime());
+            if (noColisition) {
+                AvailableSlot slot = new AvailableSlot(startTimePointer, showtime.getStartTime(),
+                        getDurationBetween(startTimePointer, showtime.getStartTime()));
+                availableSlots.add(slot);
+            }
+            startTimePointer = getEndTimeFromShowtime(showtime);
+        }
+        // Last check
+        if (!startTimePointer.equals(endDay)) {
+            AvailableSlot slot = new AvailableSlot(startTimePointer, endDay,
+                    getDurationBetween(startTimePointer, endDay));
+            availableSlots.add(slot);
+        }
+        return availableSlots;
+    }
+
+    private LocalDateTime getEndTimeFromShowtime(Showtime showtime) {
+        long showtimeDuration = getShowtimeDuration(showtime);
+        return showtime.getStartTime().plusMinutes(showtimeDuration);
+    }
+
+    private int getShowtimeDuration(Showtime showtime) {
+        return CLEAN_TIME + showtime.getMovie().getDuration();
+    }
+
+    private Long getDurationBetween(LocalDateTime start, LocalDateTime end) {
+        return Duration.between(start, end).toMinutes();
     }
 
     public ShowtimeDTOs.Response createShowtime(ShowtimeDTOs.CreateRequest request) {
