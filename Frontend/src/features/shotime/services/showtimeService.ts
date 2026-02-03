@@ -32,4 +32,9 @@ export const showtimeService = {
     const { data } = await api.delete(`/showtimes/${showtimeId}`);
     return data;
   },
+
+  getSeatStatus: async (showtimeId: number) => {
+    const { data } = await api.get(`/showtimes/${showtimeId}/seatStatus`);
+    return data;
+  },
 };
