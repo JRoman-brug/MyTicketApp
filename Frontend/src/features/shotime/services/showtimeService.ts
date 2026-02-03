@@ -28,4 +28,8 @@ export const showtimeService = {
     const { data } = await api.patch(`/showtimes`, request);
     return data;
   },
+  deleteShowtime: async (showtimeId: number) => {
+    const { data } = await api.delete(`/showtimes/${showtimeId}`);
+    return data;
+  },
 };
