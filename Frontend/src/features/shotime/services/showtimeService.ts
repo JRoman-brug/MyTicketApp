@@ -5,6 +5,7 @@ import type {
   CreateShowtimeType,
   UpdateShowtimeType,
 } from '../types/showtimeType';
+import type { CalendarDate } from '@internationalized/date';
 
 export const showtimeService = {
   getAllShowtime: async () => {
@@ -35,6 +36,17 @@ export const showtimeService = {
 
   getSeatStatus: async (showtimeId: number) => {
     const { data } = await api.get(`/showtimes/${showtimeId}/seatStatus`);
+    return data;
+  },
+
+  getHallSchedule: async (hallId: number, day: CalendarDate) => {
+    const dayFormatted = day.toString();
+    const { data } = await api.get(`/showtimes/hallSchedule`, {
+      params: {
+        hallId,
+        dayFormatted,
+      },
+    });
     return data;
   },
 };
