@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 
 import { useNavigate } from 'react-router-dom';
 import { editMovieSchema, type EditMovieData } from '../schemas/movieSchema';
-import type { MovieType } from '../types/movieType';
+import type { MovieSummaryType } from '../types/movieType';
 import { useUpdateMovie } from '../hooks/useUpdateMovie';
 
 interface EditMovieFromProps {
-  readonly initialData: MovieType;
+  readonly initialData: MovieSummaryType;
 }
 
 function EditMovieFrom({ initialData }: EditMovieFromProps) {

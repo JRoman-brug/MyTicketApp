@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@heroui/react';
 import { useCallback, type Key } from 'react';
-import type { MovieType } from '../types/movieType';
+import type { MovieSummaryType } from '../types/movieType';
 import MovieAction from './MovieActions';
 import MovieTableHeader from './MovieTableHeader';
 
@@ -18,11 +18,11 @@ const columns = [
 ];
 
 interface MovieTableProps {
-  readonly movies: MovieType[] | undefined;
+  readonly movies: MovieSummaryType[] | undefined;
 }
 
 function MovieTable({ movies }: MovieTableProps) {
-  const renderCell = useCallback((movie: MovieType, columnKey: Key) => {
+  const renderCell = useCallback((movie: MovieSummaryType, columnKey: Key) => {
     switch (columnKey) {
       case 'NAME':
         return `${movie.name}`;

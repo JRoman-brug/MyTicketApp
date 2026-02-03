@@ -1,7 +1,7 @@
-import type { MovieType } from '../types/movieType';
+import type { MovieSummaryType } from '../types/movieType';
 
 // TODO remove this when backend implement a endpoint to get movies
-export const movies: MovieType[] = [
+export const movies: MovieSummaryType[] = [
   {
     id: 1,
     name: 'Oppenheimer',
