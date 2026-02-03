@@ -2,7 +2,7 @@ import type { PaginatedResponse } from '@/common/types';
 import { api } from '@/lib/axios';
 import type {
   ShowtimeDetailsType,
-  CreateRequestType,
+  CreateShowtimeType,
 } from '../types/showtimeType';
 
 export const showtimeService = {
@@ -18,7 +18,7 @@ export const showtimeService = {
     return data;
   },
 
-  createShowtime: async (request: CreateRequestType) => {
+  createShowtime: async (request: CreateShowtimeType) => {
     const { data } = await api.post(`/showtimes`, request);
     return data;
   },

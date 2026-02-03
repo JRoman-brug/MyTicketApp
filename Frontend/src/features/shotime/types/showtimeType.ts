@@ -1,16 +1,16 @@
 import type { HallDetailsType } from '@/features/cinema/types';
 import type { MovieSummaryType } from '@/features/movies/types/movieType';
 
-export interface CreateRequestType {
+export interface CreateShowtimeType {
   startTime: string;
   movieId: number;
   hallId: number;
 }
 
-export interface UpdateRequestType {
+export interface UpdateShowtimeType {
   id: number;
-  startTime: string;
-  hallId: string;
+  startTime?: string;
+  hallId?: string;
 }
 
 export interface ShowtimeDetailsType {
