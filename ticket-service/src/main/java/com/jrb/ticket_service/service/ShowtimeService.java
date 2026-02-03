@@ -64,7 +64,8 @@ public class ShowtimeService {
         log.debug("Fechting showtime with ID: {}", id);
         Showtime showtime = showTimeRepository.findById(id)
                 .orElseThrow(() -> new ShowtimeNotFoundException(id));
-        return createReposnResponseDTO(showtime.getStartTime(), showtime.getHall(), showtime.getMovie());
+        return createReposnResponseDTO(showtime.getId(), showtime.getStartTime(), showtime.getHall(),
+                showtime.getMovie());
     }
 
     public Page<ShowtimeDTOs.Response> getAllShowtime(int page, int size) {
@@ -164,7 +165,8 @@ public class ShowtimeService {
                 .hall(hall)
                 .build();
         Showtime savedShowtime = showTimeRepository.save(newShowtime);
-        return createReposnResponseDTO(savedShowtime.getStartTime(), savedShowtime.getHall(), savedShowtime.getMovie());
+        return createReposnResponseDTO(savedShowtime.getId(), savedShowtime.getStartTime(), savedShowtime.getHall(),
+                savedShowtime.getMovie());
     }
 
     private void validateCollision(Long hallId, LocalDateTime newStart, int duration) {
@@ -186,12 +188,12 @@ public class ShowtimeService {
         }
     }
 
-    private ShowtimeDTOs.Response createReposnResponseDTO(LocalDateTime startTime, Hall hall, Movie movie) {
+    private ShowtimeDTOs.Response createReposnResponseDTO(Long id, LocalDateTime startTime, Hall hall, Movie movie) {
         int totalSeats = hall.getSeats().size();
         int availableSeats = totalSeats;
         HallDTOs.Summary hallDTO = new HallDTOs.Summary(hall.getId(), hall.getName());
         MovieDTOs.Summary movieDTO = new MovieDTOs.Summary(movie.getId(), movie.getName());
-        return new ShowtimeDTOs.Response(startTime, movieDTO, hallDTO, totalSeats, availableSeats);
+        return new ShowtimeDTOs.Response(id, startTime, movieDTO, hallDTO, totalSeats, availableSeats);
     }
 
     public ShowtimeDTOs.Response updateShowtime(ShowtimeDTOs.UpdateRequest request) {
@@ -215,7 +217,8 @@ public class ShowtimeService {
 
         Showtime showtimeUpdated = showTimeRepository.save(showtimeToUpdate);
         log.info("Showtime with ID {} update successfully", showtimeToUpdate.getId());
-        return createReposnResponseDTO(showtimeUpdated.getStartTime(), showtimeUpdated.getHall(),
+        return createReposnResponseDTO(showtimeUpdated.getId(), showtimeUpdated.getStartTime(),
+                showtimeUpdated.getHall(),
                 showtimeUpdated.getMovie());
     }
 

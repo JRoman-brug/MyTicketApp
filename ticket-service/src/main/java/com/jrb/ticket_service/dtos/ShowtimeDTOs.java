@@ -22,6 +22,7 @@ public class ShowtimeDTOs {
         }
 
         public record Response(
+                        Long id,
                         LocalDateTime startTime,
                         MovieDTOs.Summary movie,
                         HallDTOs.Summary hall,
