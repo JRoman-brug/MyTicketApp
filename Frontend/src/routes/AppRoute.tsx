@@ -1,6 +1,7 @@
 import CreateMoviePage from '@/pages/(admin)/movies/createMovie/CreateMoviePage';
 import EditMoviePage from '@/pages/(admin)/movies/editMovie/EditMoviePage';
 import MoviePage from '@/pages/(admin)/movies/MoviePage';
+import { showtimeRoutes } from '@/pages/(admin)/showtimes/showtimeRoute';
 import RootLayout from '@/pages/RootLayout';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      ...showtimeRoutes,
     ],
   },
 ]);

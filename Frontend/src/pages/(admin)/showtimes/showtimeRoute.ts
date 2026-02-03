@@ -1,7 +1,7 @@
 import type { RouteObject } from 'react-router-dom';
 
 // Exportamos un array de objetos ruta
-export const movieRoutes: RouteObject[] = [
+export const showtimeRoutes: RouteObject[] = [
   {
     path: 'showtime',
     children: [
