@@ -14,6 +14,7 @@ export interface UpdateShowtimeType {
 }
 
 export interface ShowtimeDetailsType {
+  id: number;
   startTime: string;
   movie: MovieSummaryType;
   hall: HallDetailsType;
