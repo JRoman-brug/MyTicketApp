@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { showtimeService } from '../services/showtimeService';
 import { showtimesKeys } from './showTimeKeys';
 
-export const useDeleteMovie = () => {
+export const useDeleteShowtime = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -10,7 +10,7 @@ export const useDeleteMovie = () => {
       showtimeService.deleteShowtime(showtimeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: showtimesKeys.lists() });
-      console.log('Movies deleted succesfully');
+      console.log('Showtime deleted succesfully');
     },
     onError: (error) => {
       console.log(error);
@@ -18,7 +18,7 @@ export const useDeleteMovie = () => {
   });
 
   return {
-    deleteMovie: mutation.mutate,
+    deleteShowtime: mutation.mutate,
     isPending: mutation.isPending,
     isError: mutation.isError,
   };

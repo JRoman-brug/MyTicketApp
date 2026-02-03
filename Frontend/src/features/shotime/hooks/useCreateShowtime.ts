@@ -3,15 +3,15 @@ import type { CreateShowtimeType } from '../types/showtimeType';
 import { showtimeService } from '../services/showtimeService';
 import { showtimesKeys } from './showTimeKeys';
 
-export const useCreateMovie = () => {
+export const useCreateShowtime = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (data: CreateShowtimeType) =>
       showtimeService.createShowtime(data),
     onSuccess: () => {
-      console.log('Movie created successfully.');
       queryClient.invalidateQueries({ queryKey: showtimesKeys.lists() });
+      console.log('Showtime created successfully.');
       //   Navigate
     },
     onError: (error) => {
@@ -19,7 +19,7 @@ export const useCreateMovie = () => {
     },
   });
   return {
-    createMovie: mutation.mutate,
+    createShowtime: mutation.mutate,
     isPending: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error,

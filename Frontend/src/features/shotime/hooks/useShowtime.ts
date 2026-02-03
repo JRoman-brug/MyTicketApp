@@ -10,7 +10,7 @@ export const useShowtime = (showtimeId: number) => {
     retry: CANT_RETRY_TIME,
   });
   return {
-    movie: query.data,
+    showtime: query.data,
     isError: query.isError,
     isLoading: query.isLoading,
     error: query.error,
