@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { movieService } from '../services/movieService';
 
 export const useInfiniteMovies = () => {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: ['movies-infinite'],
     // pageParam es el número de página actual que gestiona React Query
     queryFn: ({ pageParam = 0 }) => movieService.getAllMovies(pageParam, 10), // Tamaño 10
@@ -12,4 +12,10 @@ export const useInfiniteMovies = () => {
       return lastPage.nextPath ? undefined : lastPage.pageNumber + 1;
     },
   });
+  return {
+    movies: query.data,
+    hasMore: query.hasNextPage,
+    isLoading: query.isLoading,
+    onLoadMore: query.isFetching,
+  };
 };
