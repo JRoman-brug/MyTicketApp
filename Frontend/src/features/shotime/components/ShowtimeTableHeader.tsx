@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function ShowtimeTableHeader() {
   const navigate = useNavigate();
   const addHandler = () => {
-    navigate(`/showtime/add`);
+    navigate(`create`);
   };
   return (
     <header className="w-full flex justify-between">
