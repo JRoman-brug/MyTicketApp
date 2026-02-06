@@ -1,17 +1,28 @@
 import { useInfiniteMovies } from '@/features/movies/hooks/useInfinityMovies';
-import type { MovieSummaryType } from '@/features/movies/types/movieType';
+import type { MovieDetailsType } from '@/features/movies/types/movieType';
 import { Select, SelectItem } from '@heroui/react';
 import { useInfiniteScroll } from '@heroui/use-infinite-scroll';
 import { useMemo, useState } from 'react';
-import { Controller, type Control } from 'react-hook-form';
-import type { updateShowtimeSchemaType } from '../../schema/showtimeSchema';
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
 
-interface SelectMovieInputProps {
-  readonly initialMovie: MovieSummaryType;
-  readonly control: Control<updateShowtimeSchemaType>;
+interface SelectMovieInputProps<T extends FieldValues> {
+  readonly initialMovie?: MovieDetailsType;
+  readonly control: Control<T>;
+  readonly name: Path<T>;
+  readonly label?: string;
 }
 
-function SelectMovieInput({ initialMovie, control }: SelectMovieInputProps) {
+function SelectMovieInput<T extends FieldValues>({
+  initialMovie,
+  control,
+  name,
+  label,
+}: SelectMovieInputProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const { movies, hasMore, isLoading, onLoadMore } = useInfiniteMovies();
 
@@ -41,11 +52,11 @@ function SelectMovieInput({ initialMovie, control }: SelectMovieInputProps) {
 
   return (
     <Controller
-      name="movieId"
+      name={name}
       control={control}
       render={({ field }) => (
         <Select
-          label="Select a movie"
+          label={label}
           placeholder="Select a movie"
           items={items}
           isLoading={isLoading}
