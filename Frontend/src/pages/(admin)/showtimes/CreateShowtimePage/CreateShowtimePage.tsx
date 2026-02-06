@@ -1,5 +1,5 @@
 function CreateShowtimePage() {
-  return <div>AddShowtimePage</div>;
+  return <main className="w-screen h-screen">AddShowtimePage</main>;
 }
 
 export default CreateShowtimePage;
