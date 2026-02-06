@@ -10,7 +10,9 @@ interface ShowtimeActionsProps {
 function ShowtimeActions({ showtimeId }: ShowtimeActionsProps) {
   const navigate = useNavigate();
   const { deleteShowtime } = useDeleteShowtime();
-
+  const editHandler = () => {
+    navigate(`/showtimes/edit/${showtimeId}`);
+  };
   const deleteHandler = () => {
     deleteShowtime(showtimeId);
     navigate('/showtimes');
@@ -21,6 +23,7 @@ function ShowtimeActions({ showtimeId }: ShowtimeActionsProps) {
         aria-label={`Edit showtime with id ${showtimeId}`}
         isIconOnly
         color="warning"
+        onPress={editHandler}
       >
         <Pencil />
       </Button>
