@@ -14,10 +14,10 @@ export type createShowtimeSchemaType = z.infer<typeof createShowtimeSchema>;
 
 export const updateShowtimeSchema = baseShowtimeSchema
   .omit({
-    hallId: true,
+    movieId: true,
   })
   .partial({
-    movieId: true,
+    hallId: true,
     startTime: true,
   });
 

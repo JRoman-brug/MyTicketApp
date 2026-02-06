@@ -10,7 +10,7 @@ export interface CreateShowtimeType {
 export interface UpdateShowtimeType {
   id: number;
   startTime?: string;
-  hallId?: string;
+  hallId?: number;
 }
 
 export interface ShowtimeDetailsType {

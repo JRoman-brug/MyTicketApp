@@ -1,8 +1,5 @@
 import { Button, DatePicker, Form } from '@heroui/react';
-import type {
-  ShowtimeDetailsType,
-  UpdateShowtimeType,
-} from '../types/showtimeType';
+import type { ShowtimeDetailsType } from '../types/showtimeType';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -11,8 +8,7 @@ import {
 } from '../schema/showtimeSchema';
 import { parseAbsoluteToLocal } from '@internationalized/date';
 import { useUpdateShowtime } from '../hooks/useUpdateShowtime';
-import SelectMovieInput from './SelectMovieInput';
-import { useEffect } from 'react';
+import SelectHallInput from './SelectHallInput';
 
 interface ShowtimeUpdateFormProps {
   readonly showtime: ShowtimeDetailsType;
@@ -28,13 +24,10 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
     defaultValues: {
       id: showtime.id,
       startTime: showtime.startTime + 'Z',
-      movieId: showtime.movie.id,
+      hallId: showtime.hall.id,
     },
   });
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-  const onSubmit: SubmitHandler<UpdateShowtimeType> = (
+  const onSubmit: SubmitHandler<updateShowtimeSchemaType> = (
     data: updateShowtimeSchemaType
   ) => {
     console.log(data);
@@ -65,7 +58,7 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
           />
         )}
       />
-      <SelectMovieInput control={control} initialMovie={showtime.movie} />
+      <SelectHallInput control={control} />
       <Button
         aria-label="Button to submit the form"
         color="primary"
