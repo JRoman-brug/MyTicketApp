@@ -1,21 +1,31 @@
-import { Controller, type Control } from 'react-hook-form';
-import type { updateShowtimeSchemaType } from '../../schema/showtimeSchema';
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
 import { Select, SelectItem } from '@heroui/react';
 import { useAllHall } from '@/features/cinema/hooks/useAllHall';
 
-interface SelectHallInputProps {
-  readonly control: Control<updateShowtimeSchemaType>;
+interface SelectHallInputProps<T extends FieldValues> {
+  readonly control: Control<T>;
+  readonly name: Path<T>; // 'Path<T>' asegura que el string 'name' exista en tu Schema
+  readonly label?: string;
 }
 
-function SelectHallInput({ control }: SelectHallInputProps) {
+function SelectHallInput<T extends FieldValues>({
+  control,
+  name,
+  label,
+}: SelectHallInputProps<T>) {
   const { halls, isLoading } = useAllHall();
   return (
     <Controller
-      name="hallId"
+      name={name}
       control={control}
       render={({ field }) => (
         <Select
-          label="Select a hall"
+          label={label}
           placeholder="Select a hall"
           items={halls || []}
           isLoading={isLoading}

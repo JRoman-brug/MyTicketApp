@@ -1,14 +1,16 @@
 import { Button, DatePicker, Form } from '@heroui/react';
-import type { ShowtimeDetailsType } from '../types/showtimeType';
+
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+import { parseDateTime } from '@internationalized/date';
+import type { ShowtimeDetailsType } from '@/features/shotime/types/showtimeType';
+import { useUpdateShowtime } from '@/features/shotime/hooks/useUpdateShowtime';
 import {
   updateShowtimeSchema,
   type updateShowtimeSchemaType,
-} from '../schema/showtimeSchema';
-import { parseDateTime } from '@internationalized/date';
-import { useUpdateShowtime } from '../hooks/useUpdateShowtime';
-import SelectHallInput from './inputs/SelectHallInput';
+} from '@/features/shotime/schema/showtimeSchema';
+import SelectHallInput from '@/features/shotime/components/inputs/SelectHallInput';
 
 interface ShowtimeUpdateFormProps {
   readonly showtime: ShowtimeDetailsType;
@@ -56,7 +58,7 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
           />
         )}
       />
-      <SelectHallInput control={control} />
+      <SelectHallInput control={control} name="hallId" label="Select a hall" />
       <Button
         aria-label="Button to submit the form"
         color="primary"

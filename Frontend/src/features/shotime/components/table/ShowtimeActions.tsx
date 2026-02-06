@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useDeleteShowtime } from '../hooks/useDeleteMovie';
+import { useDeleteShowtime } from '@/features/shotime/hooks/useDeleteMovie';
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '@/components/ConfirmModal';
 
