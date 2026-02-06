@@ -1,4 +1,4 @@
-import ShowtimeUpdateForm from '@/features/shotime/components/ShowtimeUpdateForm';
+import ShowtimeUpdateForm from '@/features/shotime/components/Forms/ShowtimeUpdateForm';
 import { useShowtime } from '@/features/shotime/hooks/useShowtime';
 import { Button } from '@heroui/react';
 import { useNavigate, useParams } from 'react-router-dom';

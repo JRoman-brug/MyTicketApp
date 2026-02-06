@@ -4,7 +4,7 @@ import { Select, SelectItem } from '@heroui/react';
 import { useInfiniteScroll } from '@heroui/use-infinite-scroll';
 import { useMemo, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
-import type { updateShowtimeSchemaType } from '../schema/showtimeSchema';
+import type { updateShowtimeSchemaType } from '../../schema/showtimeSchema';
 
 interface SelectMovieInputProps {
   readonly initialMovie: MovieSummaryType;

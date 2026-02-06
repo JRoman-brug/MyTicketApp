@@ -8,7 +8,7 @@ import {
 } from '../schema/showtimeSchema';
 import { parseDateTime } from '@internationalized/date';
 import { useUpdateShowtime } from '../hooks/useUpdateShowtime';
-import SelectHallInput from './SelectHallInput';
+import SelectHallInput from './inputs/SelectHallInput';
 
 interface ShowtimeUpdateFormProps {
   readonly showtime: ShowtimeDetailsType;

@@ -1,4 +1,4 @@
-import ShowtimeTable from '@/features/shotime/components/ShowtimeTable';
+import ShowtimeTable from '@/features/shotime/components/table/ShowtimeTable';
 import { useAllShowtime } from '@/features/shotime/hooks/useAllShowtimes';
 
 function ShowtimePage() {

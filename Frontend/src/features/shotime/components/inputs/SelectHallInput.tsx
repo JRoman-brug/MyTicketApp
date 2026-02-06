@@ -1,5 +1,5 @@
 import { Controller, type Control } from 'react-hook-form';
-import type { updateShowtimeSchemaType } from '../schema/showtimeSchema';
+import type { updateShowtimeSchemaType } from '../../schema/showtimeSchema';
 import { Select, SelectItem } from '@heroui/react';
 import { useAllHall } from '@/features/cinema/hooks/useAllHall';
 
