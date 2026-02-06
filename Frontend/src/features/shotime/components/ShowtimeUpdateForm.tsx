@@ -37,7 +37,7 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
     <Form
       onSubmit={handleSubmit(onSubmit)}
       aria-label="Form to update a showtime"
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-2 items-center"
       validationBehavior="aria"
     >
       <Controller
