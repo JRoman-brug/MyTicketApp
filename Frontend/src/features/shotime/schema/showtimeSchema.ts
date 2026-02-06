@@ -1,8 +1,8 @@
 import z from 'zod';
-
+const localDateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$/;
 const baseShowtimeSchema = z.object({
   id: z.number(),
-  startTime: z.iso.datetime(),
+  startTime: z.string().regex(localDateTimeRegex),
   movieId: z.number(),
   hallId: z.number(),
 });

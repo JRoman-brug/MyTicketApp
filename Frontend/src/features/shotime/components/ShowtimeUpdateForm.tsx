@@ -6,7 +6,7 @@ import {
   updateShowtimeSchema,
   type updateShowtimeSchemaType,
 } from '../schema/showtimeSchema';
-import { parseAbsoluteToLocal } from '@internationalized/date';
+import { parseDateTime } from '@internationalized/date';
 import { useUpdateShowtime } from '../hooks/useUpdateShowtime';
 import SelectHallInput from './SelectHallInput';
 
@@ -23,7 +23,7 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
     resolver: zodResolver(updateShowtimeSchema),
     defaultValues: {
       id: showtime.id,
-      startTime: showtime.startTime + 'Z',
+      startTime: showtime.startTime,
       hallId: showtime.hall.id,
     },
   });
@@ -46,11 +46,9 @@ function ShowtimeUpdateForm({ showtime }: ShowtimeUpdateFormProps) {
         render={({ field }) => (
           <DatePicker
             {...field}
-            value={field.value ? parseAbsoluteToLocal(field.value) : null}
-            onChange={(value) => {
-              console.log(`Value: ${value}, type: ${typeof value}`);
-
-              field.onChange(value?.toAbsoluteString());
+            value={field.value ? parseDateTime(field.value) : null}
+            onChange={(date) => {
+              field.onChange(date ? date.toString() : null);
             }}
             isInvalid={!!errors.startTime}
             errorMessage={errors.startTime?.message}
