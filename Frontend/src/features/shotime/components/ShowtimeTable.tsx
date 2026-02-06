@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@heroui/react';
 import ShowtimeActions from './ShowtimeActions';
+import ShowtimeTableHeader from './ShowtimeTableHeader';
 
 const columns = [
   { name: 'Id', uid: 'ID' },
@@ -47,7 +48,7 @@ function ShowtimeTable({ showtimes }: ShowtimeTableProps) {
   );
 
   return (
-    <Table>
+    <Table topContent={<ShowtimeTableHeader />} topContentPlacement="outside">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
