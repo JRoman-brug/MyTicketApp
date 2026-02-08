@@ -7,7 +7,7 @@ import com.jrb.ticket_service.entity.Seat;
 
 @Mapper(componentModel = "spring")
 public interface SeatMapper {
-    SeatDTOs.Response toResponse(Seat seat);
+    SeatDTOs.Response toResponse(Seat seat, boolean isAvailable);
 
     SeatDTOs.Summary toSummary(Seat seat);
 }

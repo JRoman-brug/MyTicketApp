@@ -1,5 +1,8 @@
 package com.jrb.ticket_service.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jrb.ticket_service.dtos.MovieDTOs;
@@ -27,6 +30,12 @@ public class MovieService {
                 .orElseThrow(() -> new MovieNotFoundException(id));
 
         return movieMapper.toResponse(movie);
+    }
+
+    public Page<MovieDTOs.Response> getAllMovies(int page, int size) {
+        Pageable moviePage = PageRequest.of(page, size);
+        Page<Movie> movies = movieRepository.findAll(moviePage);
+        return movies.map(movieMapper::toResponse);
     }
 
     public MovieDTOs.Response createMovie(MovieDTOs.CreateRequest request) {

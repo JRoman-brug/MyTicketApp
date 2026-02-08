@@ -1,5 +1,7 @@
 package com.jrb.ticket_service.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +32,12 @@ public class HallController {
         log.debug("Rest request to get a Hall: {}", hallId);
         HallDTOs.Response response = hallService.getHall(hallId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<HallDTOs.Response>> getMethodName() {
+        List<HallDTOs.Response> response = hallService.getAllHall();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
