@@ -23,6 +23,7 @@
 
     <modules>
         <module>ticket-service</module>
+        <module>auth-service</module>
     </modules>
 
     <dependencyManagement>

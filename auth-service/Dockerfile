@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile-upstream:master-labs
 
 # Comments are provided throughout this file to help you get started.
 # If you need more help, visit the Dockerfile reference guide at
@@ -9,19 +9,19 @@
 ################################################################################
 
 # Create a stage for resolving and downloading dependencies.
-FROM eclipse-temurin:25-jdk-jammy AS deps
+FROM eclipse-temurin:21-jdk-jammy AS deps
 
 WORKDIR /build
 
 # Copy the mvnw wrapper with executable permissions.
-COPY --chmod=0755 mvnw mvnw
-COPY .mvn/ .mvn/
+COPY --chmod=0755 auth-service/mvnw auth-service/mvnw
+COPY auth-service/.mvn/ auth-service/.mvn/
+COPY --parents pom.xml **/pom.xml ./
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.m2 so that subsequent builds don't have to
 # re-download packages.
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+RUN --mount=type=cache,target=/root/.m2 auth-service/./mvnw dependency:go-offline -DskipTests -pl auth-service -am
 
 ################################################################################
 
@@ -35,11 +35,11 @@ FROM deps AS package
 
 WORKDIR /build
 
-COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw package -DskipTests && \
-    mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
+COPY auth-service/src auth-service/src/
+RUN --mount=type=cache,target=/root/.m2 \
+    auth-service/./mvnw package -DskipTests -pl auth-service -am && \
+    mkdir -p target && \
+    mv ./auth-service/target/app.jar target/app.jar
 
 ################################################################################
 
@@ -55,6 +55,15 @@ WORKDIR /build
 RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
 
 ################################################################################
+
+FROM extract AS development
+WORKDIR /build
+RUN cp -r /build/target/extracted/dependencies/. ./
+RUN cp -r /build/target/extracted/spring-boot-loader/. ./
+RUN cp -r /build/target/extracted/snapshot-dependencies/. ./
+RUN cp -r /build/target/extracted/application/. ./
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000
+CMD [ "java", "-Dspring.profiles.active=postgres", "org.springframework.boot.loader.launch.JarLauncher" ]
 
 # Create a new stage for running the application that contains the minimal
 # runtime dependencies for the application. This often uses a different base

@@ -8,6 +8,48 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+      target: development
+    ports:
+      - 8000:8001
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-auth-service:5432/auth_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+    networks:
+      - ticket-network
+    depends_on:
+      db-auth-service:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+
+  db-auth-service:
+    image: postgres:18-alpine
+    restart: always
+    volumes:
+      - db-auth-service-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - "5432:5433"
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d auth_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ticket-network
+
   ticket-service:
     build:
       context: .
@@ -54,6 +96,8 @@ services:
 volumes:
   db-data:
   db-ticket-service-data:
+    driver: local
+  db-auth-service-data:
     driver: local
 
 networks:

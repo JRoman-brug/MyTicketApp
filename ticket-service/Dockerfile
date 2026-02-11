@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile-upstream:master-labs
 
 # Comments are provided throughout this file to help you get started.
 # If you need more help, visit the Dockerfile reference guide at
@@ -13,20 +13,15 @@ FROM eclipse-temurin:21-jdk-jammy AS deps
 
 WORKDIR /build
 
-# COPY [options] <origen> <destino>
 # Copy the mvnw wrapper with executable permissions.
 COPY --chmod=0755 ticket-service/mvnw ticket-service/mvnw
 COPY ticket-service/.mvn/ ticket-service/.mvn/
+COPY --parents pom.xml **/pom.xml ./
 
-# RUN [montajes] <comando_linux>
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.m2 so that subsequent builds don't have to
 # re-download packages.
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=bind,source=ticket-service/pom.xml,target=ticket-service/pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ticket-service/./mvnw -f pom.xml dependency:go-offline -DskipTests
-# Lastline execute ./mvnw with the parent pom
+RUN --mount=type=cache,target=/root/.m2 ticket-service/./mvnw dependency:go-offline -DskipTests -pl ticket-service -am
 
 ################################################################################
 
@@ -40,23 +35,11 @@ FROM deps AS package
 
 WORKDIR /build
 
-# Copy source code
 COPY ticket-service/src ticket-service/src/
-# Mount the pom father and pom child
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=bind,source=ticket-service/pom.xml,target=ticket-service/pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ticket-service/./mvnw package -DskipTests && \
-    # 1. Compilamos
-    ticket-service/mvnw -f ticket-service/pom.xml package -DskipTests && \
-    # 2. Creamos la carpeta destino en la raíz para evitar errores
+RUN --mount=type=cache,target=/root/.m2 \
+    ticket-service/./mvnw package -DskipTests -pl ticket-service -am && \
     mkdir -p target && \
-    # 3. La "Línea Complicada" ajustada a tu ruta de módulo
-    #Literalmente es para obtener datos del pom y obtener el codigo compilado que se genera en una carpeta
-    mv ticket-service/target/$(ticket-service/mvnw -f ticket-service/pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(ticket-service/mvnw -f ticket-service/pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
-
-
-
+    mv ./ticket-service/target/app.jar target/app.jar
 
 ################################################################################
 
@@ -71,6 +54,8 @@ WORKDIR /build
 
 RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
 
+################################################################################
+
 FROM extract AS development
 WORKDIR /build
 RUN cp -r /build/target/extracted/dependencies/. ./
@@ -78,10 +63,7 @@ RUN cp -r /build/target/extracted/spring-boot-loader/. ./
 RUN cp -r /build/target/extracted/snapshot-dependencies/. ./
 RUN cp -r /build/target/extracted/application/. ./
 ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000
-CMD [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
-
-
-################################################################################
+CMD [ "java", "-Dspring.profiles.active=postgres", "org.springframework.boot.loader.launch.JarLauncher" ]
 
 # Create a new stage for running the application that contains the minimal
 # runtime dependencies for the application. This often uses a different base
