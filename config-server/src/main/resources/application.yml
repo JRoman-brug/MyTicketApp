@@ -1,3 +1,15 @@
 spring:
   application:
     name: config-server
+  profiles:
+    active: native
+  output:
+    ansi:
+      enabled: always
+server:
+  port: 8088
+
+eureka:
+  client:
+    service-url: 
+      default: http://localhost:8761/eureka
