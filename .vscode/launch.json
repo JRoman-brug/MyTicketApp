@@ -8,7 +8,8 @@
             "mainClass": "com.jrb.registry_service.RegistryServiceApplication",
             "projectName": "registry-service",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=62241 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=registry-service"
         },
         {
             "type": "java",
@@ -18,7 +19,8 @@
             "mainClass": "com.jrb.config_server.ConfigServerApplication",
             "projectName": "config-server",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52773 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=config-server"
         },
         {
             "type": "java",
@@ -27,6 +29,16 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.jrb.api_gateway.ApiGatewayApplication",
             "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-TicketServiceApplication<ticket-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jrb.ticket_service.TicketServiceApplication",
+            "projectName": "ticket-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
