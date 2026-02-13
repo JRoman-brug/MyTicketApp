@@ -1,3 +1,14 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+          - id: ticket-service
+            uri: lb://ticket-service
+            predicates: 
+              - Path=/api/movies/**, /api/hall/**, /api/showtimes/**, /api/tickets/**
+
 server:
   port: 8062
 
