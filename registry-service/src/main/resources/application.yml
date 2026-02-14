@@ -1,9 +1,18 @@
 spring:
   application:
     name: service-registry
+  output:
+    ansi:
+      enabled: always
 
 server:
   port: 8761
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 eureka:
   instance:

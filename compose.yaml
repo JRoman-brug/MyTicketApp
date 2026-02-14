@@ -8,6 +8,26 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
+  service-registry:
+    build:
+      context: .
+      dockerfile: registry-service/Dockerfile
+      target: development
+    ports:
+      - 8761:8761
+    networks:
+      - ticket-network
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
   auth-service:
     build:
       context: .
