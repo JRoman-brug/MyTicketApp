@@ -3,13 +3,24 @@ spring:
     name: config-server
   profiles:
     active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config 
   output:
     ansi:
       enabled: always 
 server:
   port: 8088
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
 eureka:
   client:
     service-url: 
-      default: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}

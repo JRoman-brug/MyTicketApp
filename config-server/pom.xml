@@ -30,6 +30,7 @@
 		<spring-cloud.version>2025.1.0</spring-cloud.version>
 	</properties>
 	<dependencies>
+		<!-- Cloud -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-config-server</artifactId>
@@ -44,6 +45,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Cloud -->
+		<!-- production-ready features -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- production-ready features -->
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
