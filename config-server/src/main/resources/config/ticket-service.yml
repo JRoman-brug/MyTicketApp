@@ -1,20 +1,18 @@
 spring:
-  application:
-    name: ticket-service
   output:
     ansi:
       enabled: ALWAYS
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    defer-datasource-initialization: true
-
 logging:
   level:
     com.jrb.ticket_service: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+        
+eureka:
+  client:
+    service-url: 
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
