@@ -15,67 +15,39 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.jrb.ticket_service.exception.base.BusinessException;
-import com.jrb.ticket_service.exception.base.ErrorCode;
 import com.jrb.ticket_service.exception.base.ErrorResponse;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Global exception handler for the Ticket Service.
- * Handles all exceptions thrown by the application and returns standardized
- * error responses.
- */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        /**
-         * Handles business exceptions thrown by the application.
-         * 
-         * @param ex the business exception
-         * @return error response with business error details
-         */
         @ExceptionHandler(BusinessException.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                ex.getErrorCode(),
+                                ex.getErrorCode().getCode(),
                                 ex.getMessage(),
                                 LocalDateTime.now(),
                                 null);
                 return new ResponseEntity<>(response, ex.getStatus());
         }
 
-        /**
-         * Handles validation exceptions for request body parameters.
-         * 
-         * @param ex the validation exception
-         * @return error response with validation error details
-         */
         @ExceptionHandler(MethodArgumentNotValidException.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
                 Map<String, String> details = new HashMap<>();
                 ex.getBindingResult().getFieldErrors()
                                 .forEach(error -> details.put(error.getField(), error.getDefaultMessage()));
 
                 ErrorResponse response = new ErrorResponse(
-                                ErrorCode.VALIDATION_ERROR,
-                                ErrorCode.VALIDATION_ERROR.getMessage(),
+                                "VALIDATION_ERROR",
+                                "The request contains invalid data.",
                                 LocalDateTime.now(),
                                 details);
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        /**
-         * Handles type mismatch exceptions for path/query parameters.
-         * 
-         * @param ex the type mismatch exception
-         * @return error response with type mismatch details
-         */
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
                 String typeName = Optional.ofNullable(ex.getRequiredType())
                                 .map(Class::getSimpleName)
@@ -85,60 +57,41 @@ public class GlobalExceptionHandler {
                                 ex.getName(), typeName);
 
                 ErrorResponse response = new ErrorResponse(
-                                ErrorCode.TYPE_MISMATCH,
-                                ErrorCode.TYPE_MISMATCH.getMessage(),
+                                "TYPE_MISMATCH",
+                                "Invalid parameter type in the URL.",
                                 LocalDateTime.now(),
                                 Map.of("parameter", detailMsg));
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        /**
-         * Handles malformed JSON or unreadable request body exceptions.
-         * 
-         * @param ex the message not readable exception
-         * @return error response with malformed JSON details
-         */
         @ExceptionHandler(HttpMessageNotReadableException.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleReadableException(HttpMessageNotReadableException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                ErrorCode.MALFORMED_JSON,
-                                ErrorCode.MALFORMED_JSON.getMessage(),
+                                "MALFORMED_JSON",
+                                "The request body is unreadable or has invalid formats.",
                                 LocalDateTime.now(),
                                 null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        /**
-         * Handles HTTP method not supported exceptions.
-         * 
-         * @param ex the method not supported exception
-         * @return error response with method not allowed details
-         */
+        // 4. Método HTTP no permitido (ej: POST donde debe ser GET)
         @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                ErrorCode.METHOD_NOT_ALLOWED,
+                                "METHOD_NOT_ALLOWED",
                                 String.format("HTTP method %s is not supported for this endpoint.", ex.getMethod()),
                                 LocalDateTime.now(),
                                 null);
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
         }
 
-        /**
-         * Handles all other unexpected exceptions.
-         * 
-         * @param ex the generic exception
-         * @return error response with internal server error details
-         */
+        // 5. Captura genérica (Capa de seguridad para errores no previstos)
         @ExceptionHandler(Exception.class)
-        @Hidden
         public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
                 log.debug(ex.toString());
                 ErrorResponse response = new ErrorResponse(
-                                ErrorCode.INTERNAL_SERVER_ERROR,
-                                ErrorCode.INTERNAL_SERVER_ERROR.getMessage(),
+                                "INTERNAL_SERVER_ERROR",
+                                "An unexpected error occurred. Please contact support.",
                                 LocalDateTime.now(),
                                 null);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
