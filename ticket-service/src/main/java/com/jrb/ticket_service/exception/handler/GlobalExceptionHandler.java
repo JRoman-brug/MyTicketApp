@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.jrb.ticket_service.exception.base.BusinessException;
+import com.jrb.ticket_service.exception.base.ErrorCode;
 import com.jrb.ticket_service.exception.base.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Hidden;
@@ -39,7 +40,7 @@ public class GlobalExceptionHandler {
         @Hidden
         public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                ex.getErrorCode().getCode(),
+                                ex.getErrorCode(),
                                 ex.getMessage(),
                                 LocalDateTime.now(),
                                 null);
@@ -60,8 +61,8 @@ public class GlobalExceptionHandler {
                                 .forEach(error -> details.put(error.getField(), error.getDefaultMessage()));
 
                 ErrorResponse response = new ErrorResponse(
-                                "VALIDATION_ERROR",
-                                "The request contains invalid data.",
+                                ErrorCode.VALIDATION_ERROR,
+                                ErrorCode.VALIDATION_ERROR.getMessage(),
                                 LocalDateTime.now(),
                                 details);
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -84,8 +85,8 @@ public class GlobalExceptionHandler {
                                 ex.getName(), typeName);
 
                 ErrorResponse response = new ErrorResponse(
-                                "TYPE_MISMATCH",
-                                "Invalid parameter type in the URL.",
+                                ErrorCode.TYPE_MISMATCH,
+                                ErrorCode.TYPE_MISMATCH.getMessage(),
                                 LocalDateTime.now(),
                                 Map.of("parameter", detailMsg));
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -101,8 +102,8 @@ public class GlobalExceptionHandler {
         @Hidden
         public ResponseEntity<ErrorResponse> handleReadableException(HttpMessageNotReadableException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                "MALFORMED_JSON",
-                                "The request body is unreadable or has invalid formats.",
+                                ErrorCode.MALFORMED_JSON,
+                                ErrorCode.MALFORMED_JSON.getMessage(),
                                 LocalDateTime.now(),
                                 null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -118,7 +119,7 @@ public class GlobalExceptionHandler {
         @Hidden
         public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
                 ErrorResponse response = new ErrorResponse(
-                                "METHOD_NOT_ALLOWED",
+                                ErrorCode.METHOD_NOT_ALLOWED,
                                 String.format("HTTP method %s is not supported for this endpoint.", ex.getMethod()),
                                 LocalDateTime.now(),
                                 null);
@@ -136,8 +137,8 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
                 log.debug(ex.toString());
                 ErrorResponse response = new ErrorResponse(
-                                "INTERNAL_SERVER_ERROR",
-                                "An unexpected error occurred. Please contact support.",
+                                ErrorCode.INTERNAL_SERVER_ERROR,
+                                ErrorCode.INTERNAL_SERVER_ERROR.getMessage(),
                                 LocalDateTime.now(),
                                 null);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
